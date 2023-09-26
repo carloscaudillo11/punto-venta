@@ -5,7 +5,10 @@ const orderSchema = new mongoose.Schema(
   {
     table: {
       type: Number,
-      required: true,
+      trim: true,
+    },
+    room: {
+      type: Number,
       trim: true,
     },
     date: {
@@ -17,9 +20,15 @@ const orderSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    details: {
+    menu_elements: {
+      type: [mongoose.Types.ObjectId],
+      ref: "Menu",
+      required: true,
+    },
+    products: {
       type: [mongoose.Types.ObjectId],
       ref: "Product",
+      required: true,
     },
     status: {
       type: String,

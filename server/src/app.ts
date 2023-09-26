@@ -3,11 +3,13 @@ import morgan from "morgan";
 import fileUpload from "express-fileupload";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import AuthRoutes from "./routes/auth.routes";
+import authRoutes from "./routes/auth.routes";
 import ordersRouter from "./routes/orders.routes";
 import productsRouter from "./routes/products.routes";
 import providersRoutes from "./routes/providers.routes";
 import billsRoutes from "./routes/bills.routes";
+import menuRoutes from "./routes/menu.routes";
+import providerOrdersRoutes from "./routes/providerOrders.routes"
 import { Express } from "express";
 
 const app: Express = express();
@@ -23,9 +25,11 @@ app.use(
   })
 );
 
-app.use(AuthRoutes);
+app.use(authRoutes);
+app.use(menuRoutes);
 app.use(productsRouter);
 app.use(providersRoutes);
+app.use(providerOrdersRoutes);
 app.use(ordersRouter);
 app.use(billsRoutes);
 

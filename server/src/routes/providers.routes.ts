@@ -10,10 +10,10 @@ import auth from "../middlewares/auth.middleware";
 
 const router: Router = Router();
 
-router.get("/products", auth, getProviders);
-router.post("/products", auth, createProvider);
-router.get("/products/:id", auth, getProvider);
-router.put("/products/:id", auth, updateProvider);
-router.delete("/products/:id", auth, deleteProvider);
+router.get("/providers", auth, getProviders);
+router.post("/providers", auth, createProvider);
+router.get("/providers/:id", auth, getProvider);
+router.put("/providers/:id", auth, updateProvider);
+router.delete("/providers/:id", auth, deleteProvider);
 
 export default router;

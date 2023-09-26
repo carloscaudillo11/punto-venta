@@ -1,40 +1,87 @@
-import { JwtPayload } from "jsonwebtoken";
-import { ObjectId, Document } from "mongoose";
-import { Request } from "express";
+import { JwtPayload } from 'jsonwebtoken';
+import { ObjectId, Document } from 'mongoose';
+import { Request } from 'express';
 
-type roles = "Employed" | "Admin"
+// Definición de tipos
 
+type Role = 'Employed' | 'Admin';
+type StatusOrder = 'pending' | 'completed';
+type OrderType = 'room' | 'restaurant';
+type CategoryMenu = 'beverage' | 'dish';
+type StatusProvider = 'active' | 'inactive';
+
+type Image = {
+  url: string;
+  public_id: string;
+};
+
+type Product = {
+  name: string;
+  amount: number;
+  unit_price: number;
+};
+
+// Interfaces
 
 export interface IUser extends Document {
   name: string;
   lastname: string;
   key: string;
   password: string;
-  rol: roles;
+  rol: Role;
 }
-
-type status = "pending" | "completed"
 
 export interface IOrder extends Document {
-  table: number;
+  table: number | null;
+  room: number | null;
   date: Date;
-  order_type: string;
-  details: ObjectId[];
-  status: status;
+  order_type: OrderType;
+  menu_elements: ObjectId[];
+  products: ObjectId[];
+  status: StatusOrder;
   total: number;
 }
-
-type image = {
-  url: string;
-  public_id: string;
-};
 
 export interface IProduct extends Document {
   name: string;
   description: string;
-  category: string;
+  category: CategoryMenu;
   price: number;
-  image: image;
+  provider: ObjectId;
+  amount: number;
+}
+
+export interface IMenu extends IProduct {
+  image: Image;
+  category_Menu: CategoryMenu;
+}
+
+export interface IProvider extends Document {
+  name: string;
+  nif_rif: number;
+  product: string;
+  address: {
+    street: string;
+    city: string;
+    state: string;
+    postal_code: string;
+    country: string;
+  };
+  contact: {
+    contact_name: string;
+    contact_position: string;
+    email: string;
+    phone: number;
+  };
+  status: StatusProvider;
+}
+
+export interface IOrderProvider extends Document {
+  order_number: number;
+  date: Date;
+  provider: ObjectId;
+  products: Product[];
+  total: number;
 }
 
 declare global {

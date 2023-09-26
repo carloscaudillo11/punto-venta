@@ -1,9 +1,4 @@
-import {
-  UploadApiResponse,
-  v2 as cloudinary,
-  UpdateApiOptions,
-  DeleteApiResponse,
-} from "cloudinary";
+import {v2 as cloudinary } from "cloudinary";
 import config from "../config";
 
 cloudinary.config({

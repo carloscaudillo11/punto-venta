@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-import { IProduct } from '../../types';
+import { IMenu } from '../../types';
 
-const productSchema = new mongoose.Schema(
+const menuSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -13,23 +13,18 @@ const productSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    category: {
-      type: String,
-      required: true,
-    },
     price: {
       type: Number,
       required: true,
       trim: true,
     },
-    provider: {
-      type: mongoose.Types.ObjectId,
-      ref: 'Provider',
+    image: {
+      url: String,
+      public_id: String,
     },
-    amount: {
-      type: Number,
+    category_Menu: {
+      type: String,
       required: true,
-      trim: true,
     },
   },
   {
@@ -37,4 +32,4 @@ const productSchema = new mongoose.Schema(
   }
 );
 
-export default mongoose.model<IProduct>('Product', productSchema);
+export default mongoose.model<IMenu>('Menu', menuSchema);
