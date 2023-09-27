@@ -8,6 +8,7 @@ type Role = 'Employed' | 'Admin';
 type OrderType = 'room' | 'restaurant';
 type CategoryMenu = 'beverage' | 'dish';
 type StatusProvider = 'active' | 'inactive';
+type PayMethod = 'card' | 'cash';
 
 type Image = {
   url: string;
@@ -38,6 +39,7 @@ export interface IOrder extends Document {
   menu_elements: ObjectId[];
   products: ObjectId[];
   total: number;
+  paymethod: PayMethod
 }
 
 export interface IProduct extends Document {

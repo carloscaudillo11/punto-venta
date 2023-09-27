@@ -17,7 +17,7 @@ const getOrders = async (_req: Request, res: Response) => {
 
 const createOrder = async (req: Request, res: Response) => {
   try {
-    const { order_type } = req.body;
+    const { order_type, paymethod } = req.body;
 
     let total = 0;
     let table!: number;
@@ -56,6 +56,7 @@ const createOrder = async (req: Request, res: Response) => {
       menu_elements,
       products,
       total,
+      paymethod
     });
     const ordersaved = await newOrder.save();
     return res.json(ordersaved);
