@@ -5,7 +5,6 @@ import { Request } from 'express';
 // Definición de tipos
 
 type Role = 'Employed' | 'Admin';
-type StatusOrder = 'pending' | 'completed';
 type OrderType = 'room' | 'restaurant';
 type CategoryMenu = 'beverage' | 'dish';
 type StatusProvider = 'active' | 'inactive';
@@ -38,7 +37,6 @@ export interface IOrder extends Document {
   order_type: OrderType;
   menu_elements: ObjectId[];
   products: ObjectId[];
-  status: StatusOrder;
   total: number;
 }
 

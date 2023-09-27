@@ -23,18 +23,15 @@ const orderSchema = new mongoose.Schema(
     menu_elements: {
       type: [mongoose.Types.ObjectId],
       ref: "Menu",
-      required: true,
     },
     products: {
       type: [mongoose.Types.ObjectId],
       ref: "Product",
+    },
+    total: {
+      type: Number,
       required: true,
     },
-    status: {
-      type: String,
-      required: true,
-    },
-    total: Number,
   },
   {
     timestamps: true,
