@@ -16,6 +16,6 @@ router.post('/createOrder', auth, createOrder);
 router.get('/getOrder/:id', auth, getOrder);
 router.put('/updateOrder/:id', auth, updateOrder);
 router.delete('/deleteOrder/:id', auth, deleteOrder);
-router.post('/finishOrder/:id', auth, finishOrder);
+router.put('/finishOrder/:id', auth, finishOrder);
 
 export default router;
