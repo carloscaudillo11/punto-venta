@@ -17,20 +17,12 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    price: {
-      type: Number,
-      required: true,
-      trim: true,
-    },
+    price: Number,
     provider: {
       type: mongoose.Types.ObjectId,
       ref: 'Provider',
     },
-    amount: {
-      type: Number,
-      required: true,
-      trim: true,
-    },
+    amount: Number,
   },
   {
     timestamps: true,

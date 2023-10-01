@@ -6,7 +6,7 @@ const orderProviderSchema = new mongoose.Schema(
     order_number: {
       type: Number,
       required: true,
-      trim: true,
+      unique: true,
     },
     date: {
       type: Date,
@@ -16,20 +16,18 @@ const orderProviderSchema = new mongoose.Schema(
     provider: {
       type: mongoose.Types.ObjectId,
       ref: 'Provider',
-      required: true,
     },
     products: [
       {
-        name: String,
+        id: {
+          type: mongoose.Types.ObjectId,
+          ref: 'Product',
+        },
         amount: Number,
         unit_price: Number,
       },
     ],
-    total: {
-      type: Number,
-      required: true,
-      trim: true,
-    },
+    total: Number,
   },
   {
     timestamps: true,

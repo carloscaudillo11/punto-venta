@@ -8,15 +8,15 @@ const providerSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    nif_rif: {
-      type: Number,
-      required: true,
-      trim: true,
-    },
-    product: {
+    lastname: {
       type: String,
       required: true,
       trim: true,
+    },
+    nif_rif: {
+      type: Number,
+      required: true,
+      unique: true,
     },
     address: {
       street: String,

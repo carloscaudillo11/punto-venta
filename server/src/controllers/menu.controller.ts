@@ -16,7 +16,7 @@ const getMenu = async (_req: Request, res: Response) => {
 
 const createMenuElement = async (req: Request, res: Response) => {
   try {
-    const { name, description, price, category_Menu } = req.body;
+    const { name, description, category_Menu, price } = req.body;
     let image!: Image;
     if (req.files?.image) {
       const file: UploadedFile = req.files?.image as UploadedFile;
@@ -27,7 +27,13 @@ const createMenuElement = async (req: Request, res: Response) => {
         public_id: result.public_id,
       };
     }
-    const newMenuElement = new Menu({ name, description, price, image, category_Menu });
+    const newMenuElement = new Menu({
+      name,
+      description,
+      category_Menu,
+      price,
+      image,
+    });
     const menuElementSaved = await newMenuElement.save();
     return res.json(menuElementSaved);
   } catch (error) {
@@ -38,7 +44,8 @@ const createMenuElement = async (req: Request, res: Response) => {
 const getMenuElement = async (req: Request, res: Response) => {
   try {
     const menuElement = await Menu.findById(req.params.id);
-    if (!menuElement) return res.status(404).json({ message: 'Menu Element not found' });
+    if (!menuElement)
+      return res.status(404).json({ message: 'Menu Element not found' });
     return res.json(menuElement);
   } catch (error) {
     return res.status(500).json({ message: error });
@@ -48,10 +55,11 @@ const getMenuElement = async (req: Request, res: Response) => {
 const updateMenuElement = async (req: Request, res: Response) => {
   try {
     const menuElement = await Menu.findById(req.params.id);
-    if (!menuElement) return res.status(404).json({ message: 'Product not found' });
+    if (!menuElement)
+      return res.status(404).json({ message: 'Product not found' });
 
     if (req.files?.image) {
-      const file: UploadedFile = req.files?.image as UploadedFile;
+      const file = req.files?.image as UploadedFile;
       const result = await uploadImage(file.tempFilePath);
       await deleteImage(menuElement.image.public_id);
       await fs.remove(file.tempFilePath);
@@ -76,7 +84,7 @@ const deleteMenuElement = async (req: Request, res: Response) => {
   try {
     const deletedMenuElement = await Menu.findByIdAndDelete(req.params.id);
     if (!deletedMenuElement)
-      return res.status(404).json({ message: 'Product not found' });
+      return res.status(404).json({ message: 'Menu item not found' });
 
     if (deletedMenuElement.image.public_id)
       await deleteImage(deletedMenuElement.image.public_id);
@@ -87,4 +95,10 @@ const deleteMenuElement = async (req: Request, res: Response) => {
   }
 };
 
-export { getMenu, createMenuElement, getMenuElement, updateMenuElement, deleteMenuElement };
+export {
+  getMenu,
+  createMenuElement,
+  getMenuElement,
+  updateMenuElement,
+  deleteMenuElement,
+};

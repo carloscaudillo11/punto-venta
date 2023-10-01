@@ -13,19 +13,15 @@ const menuSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    price: {
-      type: Number,
-      required: true,
-      trim: true,
-    },
-    image: {
-      url: String,
-      public_id: String,
-    },
     category_Menu: {
       type: String,
       required: true,
     },
+    price: Number,
+    image: {
+      url: String,
+      public_id: String,
+    }
   },
   {
     timestamps: true,

@@ -5,15 +5,17 @@ import {
   getOrder,
   getOrders,
   updateOrder,
+  finishOrder
 } from '../controllers/orders.controller';
 import auth from '../middlewares/auth.middleware';
 
 const router: Router = Router();
 
-router.get('/orders', auth, getOrders);
-router.post('/orders', auth, createOrder);
-router.get('/orders/:id', auth, getOrder);
-router.put('/orders/:id', auth, updateOrder);
-router.delete('/orders/:id', auth, deleteOrder);
+router.get('/getOrders', auth, getOrders);
+router.post('/createOrder', auth, createOrder);
+router.get('/getOrder/:id', auth, getOrder);
+router.put('/updateOrder/:id', auth, updateOrder);
+router.delete('/deleteOrder/:id', auth, deleteOrder);
+router.post('/finishOrder/:id', auth, finishOrder);
 
 export default router;

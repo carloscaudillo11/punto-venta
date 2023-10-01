@@ -7,9 +7,10 @@ import authRoutes from "./routes/auth.routes";
 import ordersRouter from "./routes/orders.routes";
 import productsRouter from "./routes/products.routes";
 import providersRoutes from "./routes/providers.routes";
-import billsRoutes from "./routes/bills.routes";
+import reportsRoutes from "./routes/reports.routes";
 import menuRoutes from "./routes/menu.routes";
-import providerOrdersRoutes from "./routes/providerOrders.routes"
+import providerOrdersRoutes from "./routes/providerOrders.routes";
+import transactionRoutes from "./routes/transactions.routes";
 import { Express } from "express";
 
 const app: Express = express();
@@ -31,6 +32,7 @@ app.use(productsRouter);
 app.use(providersRoutes);
 app.use(providerOrdersRoutes);
 app.use(ordersRouter);
-app.use(billsRoutes);
+app.use(reportsRoutes);
+app.use(transactionRoutes);
 
 export default app;

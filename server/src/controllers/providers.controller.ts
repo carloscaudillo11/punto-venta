@@ -12,15 +12,17 @@ const getProviders = async (_req: Request, res: Response) => {
 
 const createProvider = async (req: Request, res: Response) => {
   try {
-    const { name, nif_rif, product, address, contact, status } = req.body;
+    const { name, lastname, nif_rif, address, contact, status } = req.body;
+
     const newProvider = new Provider({
       name,
+      lastname,
       nif_rif,
-      product,
       address,
       contact,
       status,
     });
+
     const providerSaved = await newProvider.save();
     return res.json(providerSaved);
   } catch (error) {
@@ -31,8 +33,10 @@ const createProvider = async (req: Request, res: Response) => {
 const getProvider = async (req: Request, res: Response) => {
   try {
     const provider = await Provider.findById(req.params.id);
+
     if (!provider)
       return res.status(404).json({ message: 'Provider not found' });
+
     return res.json(provider);
   } catch (error) {
     return res.status(500).json({ message: error });
@@ -41,10 +45,6 @@ const getProvider = async (req: Request, res: Response) => {
 
 const updateProvider = async (req: Request, res: Response) => {
   try {
-    const provider = await Provider.findById(req.params.id);
-    if (!provider)
-      return res.status(404).json({ message: 'Provider not found' });
-
     const updatedProvider = await Provider.findByIdAndUpdate(
       req.params.id,
       { $set: req.body },

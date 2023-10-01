@@ -1,16 +1,10 @@
-import mongoose from "mongoose";
-import { IOrder } from "../../types";
+import mongoose from 'mongoose';
+import { IOrder } from '../../types';
 
 const orderSchema = new mongoose.Schema(
   {
-    table: {
-      type: Number,
-      trim: true,
-    },
-    room: {
-      type: Number,
-      trim: true,
-    },
+    table: Number,
+    room: Number,
     date: {
       type: Date,
       default: Date.now,
@@ -20,26 +14,38 @@ const orderSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    menu_elements: {
-      type: [mongoose.Types.ObjectId],
-      ref: "Menu",
-    },
-    products: {
-      type: [mongoose.Types.ObjectId],
-      ref: "Product",
-    },
-    total: {
-      type: Number,
-      required: true,
-    },
+    menu_elements: [
+      {
+        id: {
+          type: mongoose.Types.ObjectId,
+          ref: 'Menu',
+        },
+        amount: Number,
+      },
+    ],
+    products: [
+      {
+        id: {
+          type: mongoose.Types.ObjectId,
+          ref: 'Product',
+        },
+        amount: Number,
+      },
+    ],
+    total: Number,
+    status: String,
     paymethod: {
       type: String,
       required: true,
-    }
+    },
+    user: {
+      type: mongoose.Types.ObjectId,
+      ref: 'User',
+    },
   },
   {
     timestamps: true,
   }
 );
 
-export default mongoose.model<IOrder>("Order", orderSchema);
+export default mongoose.model<IOrder>('Order', orderSchema);

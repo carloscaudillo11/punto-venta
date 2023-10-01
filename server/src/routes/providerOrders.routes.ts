@@ -10,10 +10,10 @@ import auth from "../middlewares/auth.middleware";
 
 const router: Router = Router();
 
-router.get("/providerOrders", auth, getProviderOrders);
-router.post("/providerOrders", auth, createProviderOrder);
-router.get("/providerOrders/:id", auth, getProviderOrder);
-router.put("/providerOrders/:id", auth, updateProviderOrder);
-router.delete("/providerOrders/:id", auth, deleteProviderOrder);
+router.get("/getProviderOrders", auth, getProviderOrders);
+router.post("/createProviderOrder", auth, createProviderOrder);
+router.get("/getProviderOrder/:id", auth, getProviderOrder);
+router.put("/updateProviderOrder/:id", auth, updateProviderOrder);
+router.delete("/deleteProviderOrder/:id", auth, deleteProviderOrder);
 
 export default router;

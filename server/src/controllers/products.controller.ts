@@ -19,7 +19,7 @@ const createProduct = async (req: Request, res: Response) => {
       category,
       price,
       provider,
-      amount
+      amount,
     });
     const productSaved = await newProduct.save();
     return res.json(productSaved);
@@ -40,9 +40,6 @@ const getProduct = async (req: Request, res: Response) => {
 
 const updateProduct = async (req: Request, res: Response) => {
   try {
-    const product = await Product.findById(req.params.id);
-    if (!product) return res.status(404).json({ message: 'Product not found' });
-
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
       { $set: req.body },
@@ -66,4 +63,23 @@ const deleteProduct = async (req: Request, res: Response) => {
   }
 };
 
-export { getProducts, createProduct, getProduct, updateProduct, deleteProduct };
+const verifyStock = async (_req: Request, res: Response) => {
+  try {
+    const products = await Product.find().populate('provider');
+    const results = products.filter((product) => {
+      product.amount < 50;
+    });
+    return res.json(results);
+  } catch (error) {
+    return res.status(500).json({ message: error });
+  }
+};
+
+export {
+  getProducts,
+  createProduct,
+  getProduct,
+  updateProduct,
+  deleteProduct,
+  verifyStock,
+};

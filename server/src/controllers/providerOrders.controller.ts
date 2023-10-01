@@ -1,5 +1,7 @@
 import ProviderOrder from '../models/providerOrder.model';
 import { Request, Response } from 'express';
+import { TProducts } from '../../types';
+import Product from '../models/product.model';
 
 const getProviderOrders = async (_req: Request, res: Response) => {
   try {
@@ -13,6 +15,13 @@ const getProviderOrders = async (_req: Request, res: Response) => {
 const createProviderOrder = async (req: Request, res: Response) => {
   try {
     const { order_number, date, provider, products, total } = req.body;
+
+    let pros: TProducts[] = products;
+    pros.forEach(async (product) => {
+      const pro = await Product.findById(product.id);
+      const newAmount = pro!.amount + product.amount;
+      await Product.findByIdAndUpdate(product.id, { amount: newAmount });
+    });
     const newProviderOrder = new ProviderOrder({
       order_number,
       date,
@@ -32,7 +41,8 @@ const getProviderOrder = async (req: Request, res: Response) => {
     const providerOrder = await ProviderOrder.findById(req.params.id).populate(
       'provider'
     );
-    if (!providerOrder) return res.status(404).json({ message: 'Provider Order not found' });
+    if (!providerOrder)
+      return res.status(404).json({ message: 'Provider Order not found' });
     return res.json(providerOrder);
   } catch (error) {
     return res.status(500).json({ message: error });
@@ -41,9 +51,6 @@ const getProviderOrder = async (req: Request, res: Response) => {
 
 const updateProviderOrder = async (req: Request, res: Response) => {
   try {
-    const providerOrder = await ProviderOrder.findById(req.params.id);
-    if (!providerOrder) return res.status(404).json({ message: 'Provider Order not found' });
-
     const updatedProviderOrder = await ProviderOrder.findByIdAndUpdate(
       req.params.id,
       { $set: req.body },
@@ -57,7 +64,9 @@ const updateProviderOrder = async (req: Request, res: Response) => {
 
 const deleteProviderOrder = async (req: Request, res: Response) => {
   try {
-    const deletedProviderOrder = await ProviderOrder.findByIdAndDelete(req.params.id);
+    const deletedProviderOrder = await ProviderOrder.findByIdAndDelete(
+      req.params.id
+    );
     if (!deletedProviderOrder)
       return res.status(404).json({ message: 'Provider Order not found' });
 

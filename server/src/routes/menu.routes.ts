@@ -10,10 +10,10 @@ import auth from '../middlewares/auth.middleware';
 
 const router: Router = Router();
 
-router.get('/menu', auth, getMenu);
-router.post('/menu', auth, createMenuElement);
-router.get('/menu/:id', auth, getMenuElement);
-router.put('/menu/:id', auth, updateMenuElement);
-router.delete('/menu/:id', auth, deleteMenuElement);
+router.get('/getMenu', auth, getMenu);
+router.post('/createMenuElement', auth, createMenuElement);
+router.get('/getMenuElement/:id', auth, getMenuElement);
+router.put('/updateMenuElement/:id', auth, updateMenuElement);
+router.delete('/deleteMenuElement/:id', auth, deleteMenuElement);
 
 export default router;
