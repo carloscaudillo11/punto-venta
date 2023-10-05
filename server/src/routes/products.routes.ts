@@ -11,11 +11,11 @@ import auth from "../middlewares/auth.middleware";
 
 const router: Router = Router();
 
-router.get("/products", auth, getProducts);
-router.post("/products", auth, createProduct);
-router.get("/products/:id", auth, getProduct);
-router.put("/products/:id", auth, updateProduct);
-router.delete("/products/:id", auth, deleteProduct);
+router.get("/getProducts", auth, getProducts);
+router.post("/createProduct", auth, createProduct);
+router.get("/getProduct/:id", auth, getProduct);
+router.put("/updateProduct/:id", auth, updateProduct);
+router.delete("/deleteProduct/:id", auth, deleteProduct);
 router.get("/verifyStock", auth, verifyStock);
 
 export default router;

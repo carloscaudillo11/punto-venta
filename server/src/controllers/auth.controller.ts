@@ -8,7 +8,7 @@ import { IUser } from "../../types";
 
 const register = async (req: Request, res: Response) => {
   try {
-    const { name, lastname, password, key, rol } = req.body;
+    const { name, lastname, password, key } = req.body;
 
     const userFound = await User.findOne({ key });
 
@@ -23,7 +23,7 @@ const register = async (req: Request, res: Response) => {
       lastname: lastname,
       key: key,
       password: passwordHash,
-      rol: rol,
+      rol: "Empleado",
     });
     const userSaved = await newUser.save();
 

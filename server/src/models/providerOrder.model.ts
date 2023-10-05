@@ -19,7 +19,7 @@ const orderProviderSchema = new mongoose.Schema(
     },
     products: [
       {
-        id: {
+        element: {
           type: mongoose.Types.ObjectId,
           ref: 'Product',
         },

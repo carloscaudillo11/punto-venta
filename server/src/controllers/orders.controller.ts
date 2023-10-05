@@ -8,8 +8,8 @@ import { TProduct, Menu_Element } from '../../types';
 const getOrders = async (_req: Request, res: Response) => {
   try {
     const orders = await Order.find()
-      .populate('products')
-      .populate('menu_elements')
+      .populate('menu_elements.element')
+      .populate('products.element')
       .populate('user');
     res.json(orders);
   } catch (error) {
@@ -37,35 +37,28 @@ const createOrder = async (req: Request, res: Response) => {
 
     if (req.body?.menu_elements) {
       menu_elements = req.body?.menu_elements;
-      menu_elements.forEach(async (menu_element) => {
-        const menuElement = await Menu.findById(menu_element.id);
+      for (const menu_element of menu_elements) {
+        const menuElement = await Menu.findById(menu_element.element);
         total += menuElement!.price * menu_element.amount;
-      });
+      }
     }
 
     if (req.body?.products) {
       products = req.body?.products;
-      products.forEach(async (product) => {
-        const pro = await Product.findById(product.id);
-        if (product.amount > pro!.amount) {
+      for (const product of products) {
+        const productDB = await Product.findById(product.element);
+        if (product.amount > productDB!.amount) {
           return res.status(400).json({
             mensaje: `No hay suficiente cantidad de ${
-              pro!.name
+              productDB!.name
             } disponible para la orden`,
           });
         }
-        const newAmount = pro!.amount - product.amount;
-        await Product.findByIdAndUpdate(product.id, { amount: newAmount });
-        total += pro!.price * product.amount;
-      });
+        const newAmount = productDB!.amount - product.amount;
+        await Product.findByIdAndUpdate(product.element, { amount: newAmount });
+        total += productDB!.price * product.amount;
+      }
     }
-
-    const newTransaction = new Transaction({
-      type: 'Venta',
-      description: `Orden de ${order_type}`,
-      total,
-    });
-    await newTransaction.save();
 
     const newOrder = new Order({
       table,
@@ -78,6 +71,17 @@ const createOrder = async (req: Request, res: Response) => {
       user: req.user.id,
     });
     const orderSaved = await newOrder.save();
+
+    if (orderSaved) {
+      const newTransaction = new Transaction({
+        type: 'Venta',
+        description: `Orden de ${order_type}`,
+        total,
+        user: req.user.id,
+      });
+      await newTransaction.save();
+    }
+
     return res.json(orderSaved);
   } catch (error) {
     return res.status(500).json({ message: error });

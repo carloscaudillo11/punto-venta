@@ -16,7 +16,7 @@ const orderSchema = new mongoose.Schema(
     },
     menu_elements: [
       {
-        id: {
+        element: {
           type: mongoose.Types.ObjectId,
           ref: 'Menu',
         },
@@ -25,7 +25,7 @@ const orderSchema = new mongoose.Schema(
     ],
     products: [
       {
-        id: {
+        element: {
           type: mongoose.Types.ObjectId,
           ref: 'Product',
         },
@@ -34,10 +34,7 @@ const orderSchema = new mongoose.Schema(
     ],
     total: Number,
     status: String,
-    paymethod: {
-      type: String,
-      required: true,
-    },
+    paymethod: String,
     user: {
       type: mongoose.Types.ObjectId,
       ref: 'User',

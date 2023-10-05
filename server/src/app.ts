@@ -26,13 +26,13 @@ app.use(
   })
 );
 
-app.use(authRoutes);
-app.use(menuRoutes);
-app.use(productsRouter);
-app.use(providersRoutes);
-app.use(providerOrdersRoutes);
-app.use(ordersRouter);
-app.use(reportsRoutes);
-app.use(transactionRoutes);
+app.use("/auth", authRoutes);
+app.use("/menu", menuRoutes);
+app.use("/products", productsRouter);
+app.use("/providers", providersRoutes);
+app.use("/providerOrders", providerOrdersRoutes);
+app.use("/orders",ordersRouter);
+app.use("/reports", reportsRoutes);
+app.use("/transactions", transactionRoutes);
 
 export default app;

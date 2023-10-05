@@ -19,17 +19,17 @@ type Image = {
 };
 
 type TProduct = {
-  id: ObjectId;
+  element: ObjectId;
   amount: number;
 };
 
 type Menu_Element = {
-  id: ObjectId;
+  element: ObjectId;
   amount: number;
 };
 
 type TProducts = {
-  id: ObjectId;
+  element: ObjectId;
   amount: number;
   unit_price: number;
 };
@@ -49,8 +49,14 @@ export interface IOrder extends Document {
   room: number | null;
   date: Date;
   order_type: OrderType;
-  menu_elements: Menu_Element[];
-  products: TProduct[];
+  menu_elements: {
+    element: ObjectId;
+    amount: number;
+  }[];
+  products: {
+    element: ObjectId;
+    amount: number;
+  }[];
   total: number;
   status: OrderStatus;
   paymethod: PayMethod;
@@ -97,7 +103,11 @@ export interface IOrderProvider extends Document {
   order_number: number;
   date: Date;
   provider: ObjectId;
-  products: TProducts[];
+  products: {
+    element: ObjectId;
+    amount: number;
+    unit_price: number;
+  }[];
   total: number;
 }
 
@@ -106,6 +116,7 @@ export interface ITransactions extends Document {
   description: string;
   date: Date;
   total: number;
+  user: ObjectId
 }
 
 declare global {

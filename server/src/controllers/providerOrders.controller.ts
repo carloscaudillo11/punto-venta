@@ -1,7 +1,7 @@
 import ProviderOrder from '../models/providerOrder.model';
 import { Request, Response } from 'express';
-import { TProducts } from '../../types';
 import Product from '../models/product.model';
+import Transaction from '../models/transaction.model';
 
 const getProviderOrders = async (_req: Request, res: Response) => {
   try {
@@ -14,22 +14,37 @@ const getProviderOrders = async (_req: Request, res: Response) => {
 
 const createProviderOrder = async (req: Request, res: Response) => {
   try {
-    const { order_number, date, provider, products, total } = req.body;
+    const { order_number, provider, products, total } = req.body;
 
-    let pros: TProducts[] = products;
-    pros.forEach(async (product) => {
-      const pro = await Product.findById(product.id);
-      const newAmount = pro!.amount + product.amount;
-      await Product.findByIdAndUpdate(product.id, { amount: newAmount });
-    });
+    for (const product of products) {
+      const pro = await Product.findById(product.element);
+      if (!pro) {
+        return res.status(400).json({
+          mensaje: `El producto con ID ${product.element} no fue encontrado.`,
+        });
+      }
+      const newAmount = pro.amount + product.amount;
+      await Product.findByIdAndUpdate(product.element, { amount: newAmount });
+    }
+
     const newProviderOrder = new ProviderOrder({
       order_number,
-      date,
       provider,
       products,
       total,
     });
     const providerOrderSaved = await newProviderOrder.save();
+
+    if (providerOrderSaved) {
+      const newTransaction = new Transaction({
+        type: 'Compra',
+        description: `Compra a proveedor ${order_number}`,
+        total,
+        user: req.user.id,
+      });
+      await newTransaction.save();
+    }
+
     return res.json(providerOrderSaved);
   } catch (error) {
     return res.status(500).json({ message: error });
