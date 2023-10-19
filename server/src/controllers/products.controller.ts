@@ -6,7 +6,8 @@ const getProducts = async (_req: Request, res: Response) => {
     const products = await Product.find().populate('provider');
     return res.json(products);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 
@@ -24,7 +25,8 @@ const createProduct = async (req: Request, res: Response) => {
     const productSaved = await newProduct.save();
     return res.json(productSaved);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 
@@ -34,7 +36,8 @@ const getProduct = async (req: Request, res: Response) => {
     if (!product) return res.status(404).json({ message: 'Product not found' });
     return res.json(product);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 
@@ -47,7 +50,8 @@ const updateProduct = async (req: Request, res: Response) => {
     );
     return res.json(updatedProduct);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 
@@ -59,7 +63,8 @@ const deleteProduct = async (req: Request, res: Response) => {
 
     return res.sendStatus(204);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 
@@ -71,7 +76,8 @@ const verifyStock = async (_req: Request, res: Response) => {
     });
     return res.json(results);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 

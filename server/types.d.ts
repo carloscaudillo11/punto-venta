@@ -39,7 +39,7 @@ type TProducts = {
 export interface IUser extends Document {
   name: string;
   lastname: string;
-  key: string;
+  email: string;
   password: string;
   rol: Role;
 }
@@ -116,13 +116,13 @@ export interface ITransactions extends Document {
   description: string;
   date: Date;
   total: number;
-  user: ObjectId
+  user: ObjectId;
 }
 
 declare global {
   namespace Express {
     interface Request {
-      user: JwtPayload;
+      user: JwtPayload
     }
   }
 }

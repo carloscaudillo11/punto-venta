@@ -6,7 +6,8 @@ const getProviders = async (_req: Request, res: Response) => {
     const providers = await Provider.find();
     return res.json(providers);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 
@@ -26,7 +27,8 @@ const createProvider = async (req: Request, res: Response) => {
     const providerSaved = await newProvider.save();
     return res.json(providerSaved);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 
@@ -39,7 +41,8 @@ const getProvider = async (req: Request, res: Response) => {
 
     return res.json(provider);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 
@@ -52,7 +55,8 @@ const updateProvider = async (req: Request, res: Response) => {
     );
     return res.json(updatedProvider);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 
@@ -64,7 +68,8 @@ const deleteProvider = async (req: Request, res: Response) => {
 
     return res.sendStatus(204);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 

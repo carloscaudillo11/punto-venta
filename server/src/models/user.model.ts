@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import { IUser } from "../../types";
+import mongoose from 'mongoose';
+import { IUser } from '../../types';
 
 const userSchema = new mongoose.Schema(
   {
@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    key: {
+    email: {
       type: String,
       required: true,
       unique: true,
@@ -26,11 +26,11 @@ const userSchema = new mongoose.Schema(
     rol: {
       type: String,
       required: true,
-    }
+    },
   },
   {
     timestamps: true,
   }
 );
 
-export default mongoose.model<IUser>("User", userSchema);
+export default mongoose.model<IUser>('User', userSchema);

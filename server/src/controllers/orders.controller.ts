@@ -13,7 +13,8 @@ const getOrders = async (_req: Request, res: Response) => {
       .populate('user');
     res.json(orders);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 
@@ -84,7 +85,8 @@ const createOrder = async (req: Request, res: Response) => {
 
     return res.json(orderSaved);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 
@@ -97,7 +99,8 @@ const getOrder = async (req: Request, res: Response) => {
     if (!order) return res.status(404).json({ message: 'Order not found' });
     return res.json(order);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 
@@ -110,7 +113,8 @@ const updateOrder = async (req: Request, res: Response) => {
     );
     return res.json(orderUpdated);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 
@@ -123,7 +127,8 @@ const deleteOrder = async (req: Request, res: Response) => {
 
     return res.sendStatus(204);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 
@@ -138,7 +143,8 @@ const finishOrder = async (req: Request, res: Response) => {
     );
     return res.json(orderCompleted);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 

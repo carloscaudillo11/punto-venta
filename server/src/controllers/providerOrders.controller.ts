@@ -8,7 +8,8 @@ const getProviderOrders = async (_req: Request, res: Response) => {
     const providerOrder = await ProviderOrder.find().populate('provider');
     return res.json(providerOrder);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 
@@ -47,7 +48,8 @@ const createProviderOrder = async (req: Request, res: Response) => {
 
     return res.json(providerOrderSaved);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 
@@ -60,7 +62,8 @@ const getProviderOrder = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Provider Order not found' });
     return res.json(providerOrder);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 
@@ -73,7 +76,8 @@ const updateProviderOrder = async (req: Request, res: Response) => {
     );
     return res.json(updatedProviderOrder);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 
@@ -87,7 +91,8 @@ const deleteProviderOrder = async (req: Request, res: Response) => {
 
     return res.sendStatus(204);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 

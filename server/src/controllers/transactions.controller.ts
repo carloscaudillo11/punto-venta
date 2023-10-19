@@ -6,7 +6,8 @@ const getTransactions = async (_req: Request, res: Response) => {
     const transaction = await Transaction.find();
     return res.json(transaction);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 
@@ -21,7 +22,8 @@ const createTransaction = async (req: Request, res: Response) => {
     const transactionSaved = await newTransaction.save();
     return res.json(transactionSaved);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 
@@ -32,7 +34,8 @@ const getTransaction = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'transaction not found' });
     return res.json(transaction);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 
@@ -45,7 +48,8 @@ const updateTransaction = async (req: Request, res: Response) => {
     );
     return res.json(updatedTransaction);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 
@@ -59,7 +63,8 @@ const deleteTransaction = async (req: Request, res: Response) => {
 
     return res.sendStatus(204);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 

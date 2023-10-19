@@ -1,5 +1,5 @@
-import {v2 as cloudinary } from "cloudinary";
-import config from "../config";
+import { v2 as cloudinary } from 'cloudinary';
+import config from '../config';
 
 cloudinary.config({
   cloud_name: config.ENV.CLOUD_NAME,
@@ -9,7 +9,7 @@ cloudinary.config({
 
 export const uploadImage = async (filePath: string) => {
   return await cloudinary.uploader.upload(filePath, {
-    folder: "dishes",
+    folder: 'dishes',
   });
 };
 

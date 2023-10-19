@@ -5,13 +5,13 @@ import {
   getOrder,
   getOrders,
   updateOrder,
-  finishOrder
+  finishOrder,
 } from '../controllers/orders.controller';
 import auth from '../middlewares/auth.middleware';
 
 const router: Router = Router();
 
-router.get('/getOrders', auth, getOrders);
+router.get('/getOrders',auth, getOrders);
 router.post('/createOrder', auth, createOrder);
 router.get('/getOrder/:id', auth, getOrder);
 router.put('/updateOrder/:id', auth, updateOrder);

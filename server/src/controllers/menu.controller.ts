@@ -10,7 +10,8 @@ const getMenu = async (_req: Request, res: Response) => {
     const menu = await Menu.find();
     return res.json(menu);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 
@@ -37,7 +38,8 @@ const createMenuElement = async (req: Request, res: Response) => {
     const menuElementSaved = await newMenuElement.save();
     return res.json(menuElementSaved);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 
@@ -48,7 +50,8 @@ const getMenuElement = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Menu Element not found' });
     return res.json(menuElement);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 
@@ -76,7 +79,8 @@ const updateMenuElement = async (req: Request, res: Response) => {
     );
     return res.json(updatedMenuElement);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 
@@ -91,7 +95,8 @@ const deleteMenuElement = async (req: Request, res: Response) => {
 
     return res.sendStatus(204);
   } catch (error) {
-    return res.status(500).json({ message: error });
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
   }
 };
 

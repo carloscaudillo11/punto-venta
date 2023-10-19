@@ -1,6 +1,6 @@
-import app from "./app";
-import config from "./config";
-import connectDB from "./database";
+import app from './app';
+import config from './config';
+import connectDB from './database';
 
 connectDB();
 app.listen(config.ENV.PORT);

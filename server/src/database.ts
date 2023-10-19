@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import config from "./config";
+import mongoose from 'mongoose';
+import config from './config';
 
 export const connectDB = async (): Promise<void> => {
   try {
@@ -9,8 +9,8 @@ export const connectDB = async (): Promise<void> => {
   }
 };
 
-mongoose.connection.on("connected", () => {
-  console.log("Mongodb is connected to", mongoose.connection.db.databaseName);
+mongoose.connection.on('connected', () => {
+  console.log('Mongodb is connected to', mongoose.connection.db.databaseName);
 });
 
 export default connectDB;

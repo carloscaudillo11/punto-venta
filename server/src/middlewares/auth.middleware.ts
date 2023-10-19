@@ -13,7 +13,7 @@ const auth = (req: Request, res: Response, next: NextFunction) => {
       token,
       config.ENV.TOKEN_SECRET
     ) as jwt.JwtPayload;
-
+ 
     req.user = payload;
     next();
   } catch (error) {

@@ -21,7 +21,7 @@ const menuSchema = new mongoose.Schema(
     image: {
       url: String,
       public_id: String,
-    }
+    },
   },
   {
     timestamps: true,
