@@ -1,6 +1,13 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import axios from 'axios';
+import axios from '../../axios';
+
+interface User {
+  name?: string | null | undefined;
+  email?: string | null | undefined;
+  image?: string | null | undefined;
+  role?: string | null | undefined; // add role property
+}
 
 const handler = NextAuth({
   providers: [
@@ -10,24 +17,16 @@ const handler = NextAuth({
         email: { label: 'Email', type: 'email', placeholder: 'email' },
         password: { label: 'Password', type: 'password' }
       },
-      async authorize(credentials, req) {
-        const signinResponse = await axios.post(
-          'http://localhost:4000/auth/signin',
-          {
+      async authorize(credentials) {
+        const signinResponse = await axios
+          .post('auth/signin', {
             email: credentials?.email,
             password: credentials?.password
-          }
-        );
-        if (signinResponse.status === 500)
-          throw new Error('Error al consultar el backend');
-        const user = {
-          id: signinResponse.data.id,
-          name: signinResponse.data.name,
-          lastname: signinResponse.data.lastname,
-          email: signinResponse.data.email,
-          rol: signinResponse.data.rol
-        };
-        return user;
+          })
+          .catch((err) => {
+            throw new Error(err.response.data.message);
+          });
+        return signinResponse.data;
       }
     })
   ],
@@ -37,9 +36,12 @@ const handler = NextAuth({
       return token;
     },
     session({ session, token }) {
-      session.user = token.user as any;
+      session.user = token.user as User;
       return session;
     }
+  },
+  pages: {
+    signIn: '/signin'
   }
 });
 

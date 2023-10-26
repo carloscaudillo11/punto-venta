@@ -4,7 +4,7 @@ import { Request } from 'express';
 
 // Definición de tipos
 
-type Role = 'Empleado' | 'Administrador';
+type Roles = 'User' | 'Admin';
 type OrderType = 'Habitación' | 'Restaurante';
 type CategoryMenu = 'Bebida Preparada' | 'Platillo';
 type Category = 'Bebida' | 'Bebida Alcoholica';
@@ -41,7 +41,8 @@ export interface IUser extends Document {
   lastname: string;
   email: string;
   password: string;
-  rol: Role;
+  image: Image;
+  role: Roles;
 }
 
 export interface IOrder extends Document {
@@ -70,6 +71,7 @@ export interface IProduct extends Document {
   price: number;
   provider: ObjectId;
   amount: number;
+  image: Image;
 }
 
 export interface IMenu extends Document {

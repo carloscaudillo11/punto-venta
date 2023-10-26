@@ -33,7 +33,6 @@ const orderSchema = new mongoose.Schema(
       },
     ],
     total: Number,
-    status: String,
     paymethod: String,
     user: {
       type: mongoose.Types.ObjectId,

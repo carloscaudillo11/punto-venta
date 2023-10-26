@@ -1,20 +1,11 @@
-import jwt from "jsonwebtoken";
 import config from "../config";
+import { getToken } from "next-auth/jwt"
 import { NextFunction, Response, Request } from "express";
 
-const auth = (req: Request, res: Response, next: NextFunction) => {
+const auth = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { token } = req.cookies;
-
-    if (!token)
-      return res.status(401).json({ message: "Authorization Denied" });
-
-    const payload: jwt.JwtPayload = jwt.verify(
-      token,
-      config.ENV.TOKEN_SECRET
-    ) as jwt.JwtPayload;
- 
-    req.user = payload;
+    const token = await getToken({ req, secret: config.ENV.TOKEN_SECRET });
+    if (!token) return res.status(401).json({ message: "Unauthorized" });
     next();
   } catch (error) {
     return res.status(500).json({ message: error });

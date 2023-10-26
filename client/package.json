@@ -9,12 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.17",
+    "@heroicons/react": "^2.0.18",
+    "@tremor/react": "^3.10.0",
     "axios": "^1.5.1",
     "next": "13.5.4",
     "next-auth": "^4.23.2",
     "react": "^18",
     "react-dom": "^18",
-    "react-icons": "^4.11.0"
+    "react-hook-form": "^7.47.0",
+    "sonner": "^1.0.3"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.22.15",

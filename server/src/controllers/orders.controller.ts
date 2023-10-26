@@ -104,6 +104,19 @@ const getOrder = async (req: Request, res: Response) => {
   }
 };
 
+const getPendingOrders = async (_req: Request, res: Response) => {
+  try {
+    const orders = await Order.findOne({ status: 'Pendiente' })
+      .populate('products')
+      .populate('menu_elements')
+      .populate('user');
+    return res.json(orders);
+  } catch (error) {
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
+  }
+};
+
 const updateOrder = async (req: Request, res: Response) => {
   try {
     const orderUpdated = await Order.findByIdAndUpdate(
@@ -155,4 +168,5 @@ export {
   updateOrder,
   deleteOrder,
   finishOrder,
+  getPendingOrders
 };

@@ -23,6 +23,10 @@ const productSchema = new mongoose.Schema(
       ref: 'Provider',
     },
     amount: Number,
+    image: {
+      url: String,
+      public_id: String,
+    },
   },
   {
     timestamps: true,

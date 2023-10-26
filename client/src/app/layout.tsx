@@ -1,9 +1,9 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { Lato } from 'next/font/google';
+import { Roboto } from 'next/font/google';
 import Providers from '@/context/Providers';
 
-const lato = Lato({
+const roboto = Roboto({
   weight: '400',
   subsets: ['latin']
 });
@@ -19,8 +19,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }): JSX.Element {
   return (
-    <html lang="es">
-      <body className={lato.className}>
+    <html lang="es" className="h-full">
+      <body className={`h-full${roboto.className}`}>
         <Providers>{children}</Providers>
       </body>
     </html>

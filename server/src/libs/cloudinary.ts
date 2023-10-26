@@ -7,9 +7,21 @@ cloudinary.config({
   api_secret: config.ENV.API_SECRET,
 });
 
-export const uploadImage = async (filePath: string) => {
+export const uploadMenu = async (filePath: string) => {
   return await cloudinary.uploader.upload(filePath, {
     folder: 'dishes',
+  });
+};
+
+export const uploadUser = async (filePath: string) => {
+  return await cloudinary.uploader.upload(filePath, {
+    folder: 'users',
+  });
+};
+
+export const uploadProduct = async (filePath: string) => {
+  return await cloudinary.uploader.upload(filePath, {
+    folder: 'products',
   });
 };
 

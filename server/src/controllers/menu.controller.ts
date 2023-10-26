@@ -1,8 +1,8 @@
 import Menu from '../models/menu.model';
-import { uploadImage, deleteImage } from '../libs/cloudinary';
+import { Request, Response } from 'express';
+import { uploadMenu, deleteImage } from '../libs/cloudinary';
 import fs from 'fs-extra';
 import { UploadedFile } from 'express-fileupload';
-import { Request, Response } from 'express';
 import { Image } from '../../types';
 
 const getMenu = async (_req: Request, res: Response) => {
@@ -21,7 +21,7 @@ const createMenuElement = async (req: Request, res: Response) => {
     let image!: Image;
     if (req.files?.image) {
       const file: UploadedFile = req.files?.image as UploadedFile;
-      const result = await uploadImage(file.tempFilePath);
+      const result = await uploadMenu(file.tempFilePath);
       await fs.remove(file.tempFilePath);
       image = {
         url: result.secure_url,
@@ -47,7 +47,7 @@ const getMenuElement = async (req: Request, res: Response) => {
   try {
     const menuElement = await Menu.findById(req.params.id);
     if (!menuElement)
-      return res.status(404).json({ message: 'Menu Element not found' });
+      return res.status(404).json({ message: 'Menu item not found' });
     return res.json(menuElement);
   } catch (error) {
     if (error instanceof Error)
@@ -59,11 +59,11 @@ const updateMenuElement = async (req: Request, res: Response) => {
   try {
     const menuElement = await Menu.findById(req.params.id);
     if (!menuElement)
-      return res.status(404).json({ message: 'Product not found' });
+      return res.status(404).json({ message: 'Menu item not found' });
 
     if (req.files?.image) {
       const file = req.files?.image as UploadedFile;
-      const result = await uploadImage(file.tempFilePath);
+      const result = await uploadMenu(file.tempFilePath);
       await deleteImage(menuElement.image.public_id);
       await fs.remove(file.tempFilePath);
       req.body.image = {

@@ -12,13 +12,14 @@ import menuRoutes from './routes/menu.routes';
 import providerOrdersRoutes from './routes/providerOrders.routes';
 import transactionRoutes from './routes/transactions.routes';
 import { Express } from 'express';
+import config from './config';
 
 const app: Express = express();
 
 app.use(morgan('dev'));
 app.use(
   cors({
-    origin: '*',
+    origin: config.ENV.FRONTEND_URL,
     credentials: true,
   })
 );

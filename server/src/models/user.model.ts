@@ -23,7 +23,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    rol: {
+    image: {
+      url: String,
+      public_id: String,
+    },
+    role: {
       type: String,
       required: true,
     },
