@@ -13,7 +13,7 @@ const getProviders = async (_req: Request, res: Response) => {
 
 const createProvider = async (req: Request, res: Response) => {
   try {
-    const { name, lastname, nif_rif, address, contact, status } = req.body;
+    const { name, lastname, nif_rif, address, contact } = req.body;
 
     const newProvider = new Provider({
       name,
@@ -21,7 +21,7 @@ const createProvider = async (req: Request, res: Response) => {
       nif_rif,
       address,
       contact,
-      status,
+      status: 'Activo',
     });
 
     const providerSaved = await newProvider.save();

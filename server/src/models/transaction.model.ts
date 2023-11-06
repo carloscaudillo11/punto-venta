@@ -18,9 +18,9 @@ const transactionSchema = new mongoose.Schema(
       required: true,
     },
     total: Number,
-    user: {
+    box: {
       type: mongoose.Types.ObjectId,
-      ref: 'User',
+      ref: 'BoxCon',
     },
   },
   {

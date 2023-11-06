@@ -11,7 +11,7 @@ type Category = 'Bebida' | 'Bebida Alcoholica';
 type StatusProvider = 'Activo' | 'Inactivo';
 type PayMethod = 'Tarjeta' | 'Efectivo';
 type transactionType = 'Venta' | 'Gasto';
-type OrderStatus = 'Pendiente' | 'Completada';
+type BoxStatus = 'Abierta' | 'Cerrada';
 
 type Image = {
   url: string;
@@ -45,6 +45,20 @@ export interface IUser extends Document {
   role: Roles;
 }
 
+export interface IBoxCon extends Document {
+  date: Date;
+  startingAmount: string;
+  finalAmount: string;
+  user: ObjectId;
+  status: BoxStatus;
+  box: ObjectId;
+}
+
+export interface IBox extends Document {
+  name: string;
+  status: BoxStatus;
+}
+
 export interface IOrder extends Document {
   table: number | null;
   room: number | null;
@@ -59,9 +73,8 @@ export interface IOrder extends Document {
     amount: number;
   }[];
   total: number;
-  status: OrderStatus;
   paymethod: PayMethod;
-  user: ObjectId;
+  box: ObjectId;
 }
 
 export interface IProduct extends Document {
@@ -111,6 +124,7 @@ export interface IOrderProvider extends Document {
     unit_price: number;
   }[];
   total: number;
+  box: ObjectId;
 }
 
 export interface ITransactions extends Document {
@@ -118,7 +132,7 @@ export interface ITransactions extends Document {
   description: string;
   date: Date;
   total: number;
-  user: ObjectId;
+  boxCon: ObjectId;
 }
 
 declare global {

@@ -28,6 +28,10 @@ const orderProviderSchema = new mongoose.Schema(
       },
     ],
     total: Number,
+    box: {
+      type: mongoose.Types.ObjectId,
+      ref: 'BoxCon',
+    },
   },
   {
     timestamps: true,

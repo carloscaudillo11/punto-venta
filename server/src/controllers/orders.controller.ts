@@ -1,5 +1,4 @@
 import Order from '../models/order.model';
-import Menu from '../models/menu.model';
 import Product from '../models/product.model';
 import Transaction from '../models/transaction.model';
 import { Request, Response } from 'express';
@@ -10,7 +9,7 @@ const getOrders = async (_req: Request, res: Response) => {
     const orders = await Order.find()
       .populate('menu_elements.element')
       .populate('products.element')
-      .populate('user');
+      .populate('box');
     res.json(orders);
   } catch (error) {
     if (error instanceof Error)
@@ -19,14 +18,13 @@ const getOrders = async (_req: Request, res: Response) => {
 };
 
 const createOrder = async (req: Request, res: Response) => {
-  let total = 0;
   let table!: number;
   let room!: number;
   let menu_elements!: Menu_Element[];
   let products!: TProduct[];
 
   try {
-    const { order_type } = req.body;
+    const { order_type, total, box, paymethod } = req.body;
 
     if (req.body?.table) {
       table = req.body?.table;
@@ -36,13 +34,7 @@ const createOrder = async (req: Request, res: Response) => {
       room = req.body?.room;
     }
 
-    if (req.body?.menu_elements) {
-      menu_elements = req.body?.menu_elements;
-      for (const menu_element of menu_elements) {
-        const menuElement = await Menu.findById(menu_element.element);
-        total += menuElement!.price * menu_element.amount;
-      }
-    }
+    if (req.body?.menu_elements) menu_elements = req.body?.menu_elements;
 
     if (req.body?.products) {
       products = req.body?.products;
@@ -57,7 +49,6 @@ const createOrder = async (req: Request, res: Response) => {
         }
         const newAmount = productDB!.amount - product.amount;
         await Product.findByIdAndUpdate(product.element, { amount: newAmount });
-        total += productDB!.price * product.amount;
       }
     }
 
@@ -68,17 +59,17 @@ const createOrder = async (req: Request, res: Response) => {
       menu_elements,
       products,
       total,
-      status: 'Pendiente',
-      user: req.user.id,
+      paymethod,
+      box,
     });
     const orderSaved = await newOrder.save();
-
     if (orderSaved) {
       const newTransaction = new Transaction({
         type: 'Venta',
         description: `Orden de ${order_type}`,
-        total,
-        user: req.user.id,
+        date: orderSaved?.date,
+        total: total,
+        box,
       });
       await newTransaction.save();
     }
@@ -95,7 +86,7 @@ const getOrder = async (req: Request, res: Response) => {
     const order = await Order.findById(req.params.id)
       .populate('products')
       .populate('menu_elements')
-      .populate('user');
+      .populate('box');
     if (!order) return res.status(404).json({ message: 'Order not found' });
     return res.json(order);
   } catch (error) {
@@ -104,69 +95,9 @@ const getOrder = async (req: Request, res: Response) => {
   }
 };
 
-const getPendingOrders = async (_req: Request, res: Response) => {
-  try {
-    const orders = await Order.findOne({ status: 'Pendiente' })
-      .populate('products')
-      .populate('menu_elements')
-      .populate('user');
-    return res.json(orders);
-  } catch (error) {
-    if (error instanceof Error)
-      return res.status(500).json({ message: error.message });
-  }
-};
-
-const updateOrder = async (req: Request, res: Response) => {
-  try {
-    const orderUpdated = await Order.findByIdAndUpdate(
-      req.params.id,
-      { $set: req.body },
-      { new: true }
-    );
-    return res.json(orderUpdated);
-  } catch (error) {
-    if (error instanceof Error)
-      return res.status(500).json({ message: error.message });
-  }
-};
-
-const deleteOrder = async (req: Request, res: Response) => {
-  try {
-    const deletedOrder = await Order.findByIdAndDelete(req.params.id);
-
-    if (!deletedOrder)
-      return res.status(404).json({ message: 'Order not found' });
-
-    return res.sendStatus(204);
-  } catch (error) {
-    if (error instanceof Error)
-      return res.status(500).json({ message: error.message });
-  }
-};
-
-const finishOrder = async (req: Request, res: Response) => {
-  try {
-    const { paymethod } = req.body;
-    const status = 'Completada';
-    const orderCompleted = await Order.findByIdAndUpdate(
-      req.params.id,
-      { status, paymethod },
-      { new: true }
-    );
-    return res.json(orderCompleted);
-  } catch (error) {
-    if (error instanceof Error)
-      return res.status(500).json({ message: error.message });
-  }
-};
 
 export {
   getOrders,
   createOrder,
   getOrder,
-  updateOrder,
-  deleteOrder,
-  finishOrder,
-  getPendingOrders
 };

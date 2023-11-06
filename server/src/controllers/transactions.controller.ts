@@ -13,11 +13,12 @@ const getTransactions = async (_req: Request, res: Response) => {
 
 const createTransaction = async (req: Request, res: Response) => {
   try {
-    const { type, description, total } = req.body;
+    const { type, description, total, box } = req.body;
     const newTransaction = new Transaction({
       type,
       description,
       total,
+      box
     });
     const transactionSaved = await newTransaction.save();
     return res.json(transactionSaved);
@@ -39,39 +40,9 @@ const getTransaction = async (req: Request, res: Response) => {
   }
 };
 
-const updateTransaction = async (req: Request, res: Response) => {
-  try {
-    const updatedTransaction = await Transaction.findByIdAndUpdate(
-      req.params.id,
-      { $set: req.body },
-      { new: true }
-    );
-    return res.json(updatedTransaction);
-  } catch (error) {
-    if (error instanceof Error)
-      return res.status(500).json({ message: error.message });
-  }
-};
-
-const deleteTransaction = async (req: Request, res: Response) => {
-  try {
-    const deletedTransaction = await Transaction.findByIdAndDelete(
-      req.params.id
-    );
-    if (!deletedTransaction)
-      return res.status(404).json({ message: 'Transaction not found' });
-
-    return res.sendStatus(204);
-  } catch (error) {
-    if (error instanceof Error)
-      return res.status(500).json({ message: error.message });
-  }
-};
 
 export {
   getTransactions,
   createTransaction,
   getTransaction,
-  updateTransaction,
-  deleteTransaction,
 };

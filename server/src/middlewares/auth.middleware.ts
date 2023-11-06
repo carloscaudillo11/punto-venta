@@ -6,6 +6,7 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = await getToken({ req, secret: config.ENV.TOKEN_SECRET });
     if (!token) return res.status(401).json({ message: "Unauthorized" });
+    req.user = token.user;
     next();
   } catch (error) {
     return res.status(500).json({ message: error });

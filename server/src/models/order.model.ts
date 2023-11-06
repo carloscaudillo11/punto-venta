@@ -34,9 +34,9 @@ const orderSchema = new mongoose.Schema(
     ],
     total: Number,
     paymethod: String,
-    user: {
+    box: {
       type: mongoose.Types.ObjectId,
-      ref: 'User',
+      ref: 'BoxCon',
     },
   },
   {

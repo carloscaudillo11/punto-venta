@@ -15,7 +15,7 @@ router.get('/getUsers', auth, getUsers);
 router.get('/getUser/:id', auth, getUser);
 router.put('/updateUser/:id', auth, updateUser);
 router.delete('/deleteUser/:id', auth, deleteUser);
-router.post('/createUser', auth, createUser);
+router.post('/createUser',auth, createUser);
 router.post('/signin', signin);
 
 export default router;
