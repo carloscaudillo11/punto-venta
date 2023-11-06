@@ -91,7 +91,7 @@ const TableMenu = ({ menu }: { menu: Menu[] }): JSX.Element => {
         <MultiSelect
           className="max-w-full sm:max-w-xs"
           onValueChange={setSelectedNames}
-          placeholder="Selecciona una caja"
+          placeholder="Selecciona un elemento"
         >
           {menu.map((item) => (
             <MultiSelectItem key={item._id} value={item.name}>
