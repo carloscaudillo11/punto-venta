@@ -1,12 +1,11 @@
 'use client';
 import DropdownNotification from './DropdownNotification';
 import DropdownUser from './DropdownUser';
-import { type User } from '@/types';
 
 const Header = (props: {
   sidebarOpen: string | boolean | undefined;
   setSidebarOpen: (arg0: boolean) => void;
-  user: User;
+  user: any;
 }): JSX.Element => {
   return (
     <header className="sticky top-0 z-999 flex w-full bg-white drop-shadow-1">

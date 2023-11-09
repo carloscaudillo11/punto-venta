@@ -72,6 +72,7 @@ const NewMenu = (): JSX.Element => {
       loading: 'Loading...',
       success: () => {
         router.back();
+        router.refresh();
         return 'Elemento registrado exitosamente!';
       },
       error: (err) => {

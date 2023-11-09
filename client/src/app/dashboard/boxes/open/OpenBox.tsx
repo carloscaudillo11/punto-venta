@@ -10,12 +10,17 @@ import { Card, Metric, Text, Button } from '@tremor/react';
 
 const OpenBox = ({ boxes }: { boxes: any }): JSX.Element => {
   const [openModalForm, setOpenModalForm] = useState<boolean>(false);
-  const dateString = boxes.date;
-  const date = new Date(dateString);
-  const day = date.getDate().toString().padStart(2, '0');
-  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const year = date.getFullYear();
-  const formattedDate = `${day}-${month}-${year}`;
+  let formattedDate = '';
+  if (boxes !== null) {
+    const dateString = boxes.date;
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    formattedDate = `${day}-${month}-${year}`;
+  } else {
+    formattedDate = 'N/A';
+  }
 
   return (
     <>

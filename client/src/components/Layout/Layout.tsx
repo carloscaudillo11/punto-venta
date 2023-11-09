@@ -3,7 +3,6 @@ import Sidebar from '@/components/Sidebar';
 import Header from '@/components/Header';
 import { useState } from 'react';
 import { Toaster } from 'sonner';
-import { type User } from '@/types';
 
 const Layout = ({
   children,
@@ -11,7 +10,7 @@ const Layout = ({
   boxes
 }: {
   children: React.ReactNode;
-  user: User;
+  user: any;
   boxes: any;
 }): JSX.Element => {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);

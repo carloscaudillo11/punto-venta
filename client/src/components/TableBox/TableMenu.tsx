@@ -125,13 +125,15 @@ const TableMenu = ({ menu }: { menu: Menu[] }): JSX.Element => {
           <TableBody>
             {currentBoxes.map((item) => (
               <TableRow key={item._id}>
-                <TableCell>
-                  <img
-                    src={item.image.url}
-                    alt={item.name}
-                    className="w-20 h-15 rounded-sm"
-                  />
-                </TableCell>
+                {item.image && (
+                  <TableCell>
+                    <img
+                      src={item.image.url}
+                      alt={item.name}
+                      className="w-25 h-15 rounded-sm"
+                    />
+                  </TableCell>
+                )}
                 <TableCell>{item.name}</TableCell>
                 {/* <TableCell className="break-words">
                   {item.description}
@@ -145,7 +147,9 @@ const TableMenu = ({ menu }: { menu: Menu[] }): JSX.Element => {
                     <button
                       className="flex items-center justify-center focus:outline-none"
                       onClick={() => {
-                        router.push(`/dashboard/products/menu/${item._id}`);
+                        router.push(
+                          `/dashboard/products/menu/edit/${item._id}`
+                        );
                       }}
                     >
                       <PencilIcon className="w-5 text-gray-600 hover:text-blue-600" />

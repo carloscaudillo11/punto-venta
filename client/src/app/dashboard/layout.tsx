@@ -3,7 +3,6 @@ import { getServerSession } from 'next-auth';
 import { Suspense } from 'react';
 import { cookies } from 'next/headers';
 import Loading from './loading';
-import { type User } from '@/types';
 
 const DashboardLayout = async ({
   children
