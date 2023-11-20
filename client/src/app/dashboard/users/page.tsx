@@ -1,4 +1,4 @@
-import TableUsers from '@/components/TableBox/TableUsers';
+import TableUsers from '@/components/Table/TableUsers';
 const Userspage = (): JSX.Element => {
   return <TableUsers />;
 };

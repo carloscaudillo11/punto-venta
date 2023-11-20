@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import axios from '@/app/api/axios';
 import { toast } from 'sonner';
-import { ExclamationCircleIcon } from '@heroicons/react/24/solid';
+import { TextInput } from '@tremor/react';
 
 interface Box {
   _id: number;
@@ -46,7 +46,7 @@ const ModalBox = ({
     }
   }, [box, setValue]);
 
-  const onSubmit = (data: any): void => {
+  const onSubmit = handleSubmit((data) => {
     if (box === undefined) {
       const fetch = async (): Promise<any> => {
         const name = data.name;
@@ -57,8 +57,7 @@ const ModalBox = ({
         );
         return res.data;
       };
-      const promise = fetch();
-      toast.promise(promise, {
+      toast.promise(fetch(), {
         loading: 'Loading...',
         success: () => {
           setOpen(false);
@@ -93,7 +92,7 @@ const ModalBox = ({
         }
       });
     }
-  };
+  });
 
   return (
     <div>
@@ -126,7 +125,7 @@ const ModalBox = ({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <form onSubmit={handleSubmit(onSubmit)}>
+              <form onSubmit={onSubmit}>
                 <div className="max-w-3xl w-full bg-white p-6 rounded-lg shadow-xl">
                   <div className="flex justify-end">
                     <button
@@ -158,26 +157,18 @@ const ModalBox = ({
                       {box !== undefined ? 'Actualizar Caja' : 'Registrar Caja'}
                     </h3>
                     <div className="mt-2">
-                      <input
-                        type="text"
+                      <TextInput
                         {...register('name', {
-                          required: 'El nombre de caja es requerido'
+                          required: {
+                            value: true,
+                            message: 'El nombre de caja es requerido'
+                          }
                         })}
-                        className={` border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:outline-none block w-full p-2.5 ${
-                          errors.name
-                            ? 'border-red-600 border-2'
-                            : 'focus:border-blue-600 focus:border-2'
-                        }`}
                         placeholder="Nombre de la caja"
+                        error={!!errors.name}
+                        errorMessage={errors.name?.message}
+                        type="text"
                       />
-                      {errors.name && (
-                        <div className="flex gap-1 p-1">
-                          <ExclamationCircleIcon className="text-red-500 w-4 h-4" />
-                          <span className="text-red-500 text-xs">
-                            {errors.name.message}
-                          </span>
-                        </div>
-                      )}
                     </div>
                   </div>
                   <div className="mt-8 flex justify-end">

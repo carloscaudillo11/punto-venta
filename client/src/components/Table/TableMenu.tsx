@@ -157,7 +157,7 @@ const TableMenu = ({ menu }: { menu: Menu[] }): JSX.Element => {
                     <button
                       className="flex items-center justify-center focus:outline-none"
                       onClick={() => {
-                        toast(`Deseas eliminar la caja ${item.name} `, {
+                        toast(`Deseas eliminar ${item.name} `, {
                           action: {
                             label: 'Eliminar',
                             onClick: async () => {

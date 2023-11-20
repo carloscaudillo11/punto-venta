@@ -5,11 +5,35 @@ import {
   TvIcon
 } from '@heroicons/react/24/solid';
 import ModalOpenBox from '@/components/Modal/ModalOpenBox';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, Metric, Text, Button } from '@tremor/react';
+import axios from '@/app/api/axios';
 
 const OpenBox = ({ boxes }: { boxes: any }): JSX.Element => {
   const [openModalForm, setOpenModalForm] = useState<boolean>(false);
+  const [sales] = useState<number>(100);
+
+  useEffect(() => {
+    if (boxes !== null) {
+      const fetchData = async (): Promise<void> => {
+        try {
+          const id = boxes.box._id;
+          const response = await axios.get(
+            `/transactions/getSalesByBox/${id}`,
+            {
+              withCredentials: true
+            }
+          );
+          console.log(response.data); // Muestra los datos en la consola
+        } catch (error) {
+          console.error('Error al obtener datos:', error);
+        }
+      };
+
+      void fetchData();
+    }
+  }, [boxes]);
+
   let formattedDate = '';
   if (boxes !== null) {
     const dateString = boxes.date;
@@ -26,7 +50,6 @@ const OpenBox = ({ boxes }: { boxes: any }): JSX.Element => {
     <>
       {boxes !== null ? (
         <div className="flex flex-col gap-3">
-          <ModalOpenBox open={openModalForm} setOpen={setOpenModalForm} />
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">
             #{boxes.box.name}
           </h1>
@@ -63,14 +86,7 @@ const OpenBox = ({ boxes }: { boxes: any }): JSX.Element => {
                   </div>
                 </div>
                 <div className="flex justify-center">
-                  <Button
-                    icon={InboxIcon}
-                    onClick={() => {
-                      setOpenModalForm(true);
-                    }}
-                  >
-                    Corte de Caja
-                  </Button>
+                  <Button icon={InboxIcon}>Corte de Caja</Button>
                 </div>
               </div>
             </div>
@@ -82,17 +98,16 @@ const OpenBox = ({ boxes }: { boxes: any }): JSX.Element => {
             </Card>
             <Card className="max-w-md" decoration="top">
               <Text>Ventas</Text>
-              <Metric>$ 0.0</Metric>
+              <Metric>$ {sales}</Metric>
             </Card>
             <Card className="max-w-md" decoration="top">
               <Text>Total a Rendir</Text>
-              <Metric>$ calculando..</Metric>
+              <Metric>$ {boxes.startingAmount + sales}</Metric>
             </Card>
           </div>
         </div>
       ) : (
         <div className="flex flex-col gap-4">
-          <ModalOpenBox open={openModalForm} setOpen={setOpenModalForm} />
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">
             Abrir una Caja
           </h1>
@@ -105,18 +120,18 @@ const OpenBox = ({ boxes }: { boxes: any }): JSX.Element => {
                 </p>
               </div>
               <div className="flex justify-center">
-                <button
+                <Button
+                  icon={InboxIcon}
                   onClick={() => {
                     setOpenModalForm(true);
                   }}
-                  className="flex items-center gap-2 justify-center px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                 >
-                  <InboxIcon className="w-5 h-5" />
                   Abrir Caja
-                </button>
+                </Button>
               </div>
             </div>
           </div>
+          <ModalOpenBox open={openModalForm} setOpen={setOpenModalForm} />
         </div>
       )}
     </>

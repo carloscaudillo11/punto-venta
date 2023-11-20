@@ -1,11 +1,11 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Roboto } from 'next/font/google';
 import Providers from '@/context/Providers';
 import { ContextProvider } from '@/context/ProjectProvider';
 
-const font = Inter({
-  weight: '600',
+const font = Roboto({
+  weight: '400',
   subsets: ['latin']
 });
 
@@ -21,7 +21,7 @@ export default function RootLayout({
 }): JSX.Element {
   return (
     <html lang="es" className="h-full">
-      <body className={`h-full${font.className}`}>
+      <body className={`${font.className}`}>
         <Providers>
           <ContextProvider>{children}</ContextProvider>
         </Providers>

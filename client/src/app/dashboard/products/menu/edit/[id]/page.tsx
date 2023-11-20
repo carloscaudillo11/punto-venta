@@ -1,3 +1,3 @@
-import NewMenu from '../../new/NewMenu';
+import NewMenu from '../../new/page';
 
 export default NewMenu;

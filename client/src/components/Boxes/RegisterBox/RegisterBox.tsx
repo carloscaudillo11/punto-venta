@@ -1,5 +1,5 @@
 'use client';
-import TableBoxes from '@/components/TableBox/TableBoxes';
+import TableBoxes from '@/components/Table/TableBoxes';
 import { PlusCircleIcon, PencilSquareIcon } from '@heroicons/react/24/solid';
 import { useState } from 'react';
 import ModalBox from '@/components/Modal/ModalBox';
@@ -8,9 +8,9 @@ import { Button } from '@tremor/react';
 const RegisterBox = ({ boxes }: { boxes: any }): JSX.Element => {
   const [openModalBox, setOpenModalBox] = useState<boolean>(false);
   return (
-    <div className="flex flex-col gap-7 py-2">
+    <div className="flex flex-col gap-6 py-2">
       <div className="flex justify-between">
-        <h1 className="text-xl font-bold tracking-tight text-gray-700">
+        <h1 className="text-xl font-semibold tracking-tight text-gray-700">
           Registrar Caja
         </h1>
         <Button

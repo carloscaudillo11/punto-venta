@@ -14,20 +14,18 @@ import {
   ShoppingCartIcon,
   TagIcon,
   TruckIcon,
-  UsersIcon
+  UsersIcon,
+  PresentationChartLineIcon,
+  InboxIcon,
+  InboxStackIcon,
+  InboxArrowDownIcon,
+  BookOpenIcon,
+  ClipboardDocumentListIcon
 } from '@heroicons/react/24/outline';
+import axios from '@/app/api/axios';
+import { useProjectContext } from '@/context/ProjectProvider';
 
-interface SidebarProps {
-  sidebarOpen: boolean;
-  setSidebarOpen: (arg: boolean) => void;
-  boxes: any;
-}
-
-const Sidebar = ({
-  sidebarOpen,
-  setSidebarOpen,
-  boxes
-}: SidebarProps): JSX.Element => {
+const Sidebar = (): JSX.Element => {
   const pathname = usePathname();
   const trigger = useRef<any>(null);
   const sidebar = useRef<any>(null);
@@ -35,6 +33,8 @@ const Sidebar = ({
   const [sidebarExpanded, setSidebarExpanded] = useState(
     storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true'
   );
+  const [boxes, setBoxes] = useState<any[]>([]);
+  const { setSidebarOpen, sidebarOpen } = useProjectContext();
 
   // close on click outside
   useEffect(() => {
@@ -63,6 +63,24 @@ const Sidebar = ({
     }
   }, [sidebarExpanded]);
 
+  useEffect(() => {
+    const fetch = async (): Promise<any> => {
+      const res = await axios.get('/box/getBoxes', {
+        withCredentials: true
+      });
+      return res.data;
+    };
+
+    const promise = fetch();
+    promise
+      .then((data) => {
+        setBoxes(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: RectangleGroupIcon },
     {
@@ -71,19 +89,45 @@ const Sidebar = ({
       submenu:
         boxes.length > 0
           ? [
-              { name: 'Aperturar Caja', href: '/dashboard/boxes/open' },
-              { name: 'Mis Ventas', href: '/dashboard/boxes/sales' },
-              { name: 'Nueva Venta', href: '/dashboard/boxes/newSale' },
-              { name: 'Registrar Caja', href: '/dashboard/boxes/registerBox' }
+              {
+                name: 'Aperturar Caja',
+                href: '/dashboard/boxes/open',
+                icon: InboxIcon
+              },
+              {
+                name: 'Mis Ventas',
+                href: '/dashboard/boxes/sales',
+                icon: PresentationChartLineIcon
+              },
+              {
+                name: 'Nueva Venta',
+                href: '/dashboard/boxes/newSale',
+                icon: InboxArrowDownIcon
+              },
+              {
+                name: 'Registrar Caja',
+                href: '/dashboard/boxes/registerBox',
+                icon: InboxStackIcon
+              }
             ]
-          : [{ name: 'Registrar Caja', href: '/dashboard/boxes/registerBox' }]
+          : [
+              {
+                name: 'Registrar Caja',
+                href: '/dashboard/boxes/registerBox',
+                icon: InboxStackIcon
+              }
+            ]
     },
     {
       name: 'Productos',
       icon: TagIcon,
       submenu: [
-        { name: 'Menu', href: '/dashboard/products/menu' },
-        { name: 'Contables', href: '/dashboard/products/accounting' }
+        { name: 'Menu', href: '/dashboard/products/menu', icon: BookOpenIcon },
+        {
+          name: 'Contables',
+          href: '/dashboard/products/accounting',
+          icon: ClipboardDocumentListIcon
+        }
       ]
     },
     { name: 'Proveedores', href: '/dashboard/providers', icon: TruckIcon },
@@ -125,19 +169,11 @@ const Sidebar = ({
           <ArrowLeftIcon className="w-6 h-6 text-gray-600" />
         </button>
       </div>
-      {/* <!-- SIDEBAR HEADER --> */}
 
-      <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
-        {/* <!-- Sidebar Menu --> */}
-        <nav className="mt-5 py-4 px-4 lg:mt-9 lg:px-6">
-          {/* <!-- Menu Group --> */}
+      <div className="custom-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
+        <nav className="mt-3 py-4 px-4 lg:mt-9 lg:px-6">
           <div>
-            <h3 className="mb-4 ml-3 text-sm font-semibold text-bodydark2">
-              MENU
-            </h3>
-
             <ul className="mb-6 flex flex-col gap-4">
-              {/* <!-- Menu Item Dashboard --> */}
               {navigation.map((item, index) =>
                 item.submenu ? (
                   <SidebarLinkGroup
@@ -163,7 +199,6 @@ const Sidebar = ({
                               <ChevronUpIcon className="w-5 h-5 text-gray-600 absolute right-4" />
                             )}
                           </div>
-                          {/* <!-- Dropdown Menu Start --> */}
                           {item.submenu.map((subitem, index) => (
                             <div
                               key={index}
@@ -175,19 +210,25 @@ const Sidebar = ({
                                 <li>
                                   <Link
                                     href={subitem.href}
-                                    className={`relative flex items-center rounded-md py-2 px-4 duration-300 ease-in-out   ${
+                                    className={`relative flex items-center gap-2.5 rounded-md py-2 px-4 duration-300 ease-in-out   ${
                                       pathname === subitem.href
-                                        ? 'bg-cyan-700 text-white font-semibold'
+                                        ? 'bg-cyan-700 text-white font-medium'
                                         : 'hover:bg-gray-100 text-gray-600 font-normal'
                                     } `}
                                   >
+                                    <subitem.icon
+                                      className={`w-5 h-5 ${
+                                        pathname === subitem.href
+                                          ? 'text-white'
+                                          : 'text-gray-600'
+                                      }`}
+                                    />
                                     {subitem.name}
                                   </Link>
                                 </li>
                               </ul>
                             </div>
                           ))}
-                          {/* <!-- Dropdown Menu End --> */}
                         </React.Fragment>
                       );
                     }}
@@ -198,7 +239,7 @@ const Sidebar = ({
                       href={item.href}
                       className={`relative flex items-center gap-2.5 rounded-md py-2 px-3 duration-300 ease-in-out  ${
                         pathname === item.href
-                          ? 'bg-cyan-700 text-white font-semibold'
+                          ? 'bg-cyan-700 text-white font-medium'
                           : 'hover:bg-gray-100 text-gray-600 font-normal'
                       }`}
                     >

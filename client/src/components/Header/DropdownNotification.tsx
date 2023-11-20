@@ -34,7 +34,7 @@ const DropdownNotification = (): JSX.Element => {
           setDropdownOpen(!dropdownOpen);
         }}
         href="#"
-        className="relative flex h-8.5 w-8.5 items-center justify-center rounded-full border-[0.5px] border-gray-100 bg-gray-100 hover:text-cyan-600"
+        className="relative flex h-8.5 w-8.5 items-center justify-center rounded-full border-[0.5px] border-gray-100 bg-gray-100 text-gray-500 hover:text-cyan-600"
       >
         <span
           className={`absolute -top-0.5 right-0 z-1 h-2 w-2 rounded-full bg-red-600 ${
@@ -75,7 +75,7 @@ const DropdownNotification = (): JSX.Element => {
           <h5 className="text-sm font-medium text-bodydark2">Notification</h5>
         </div>
 
-        <ul className="flex h-auto flex-col overflow-y-auto">
+        <ul className="flex h-auto flex-col overflow-y-auto custom-scrollbar">
           <li>
             <Link
               className="flex flex-col gap-2.5 border-t border-gray-100 px-4.5 py-3 hover:bg-gray-200"

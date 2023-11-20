@@ -1,33 +1,29 @@
-import Layout from '@/components/Layout/Layout';
 import { getServerSession } from 'next-auth';
-import { Suspense } from 'react';
-import { cookies } from 'next/headers';
-import Loading from './loading';
+import Sidebar from '@/components/Sidebar';
+import Header from '@/components/Header';
+import { Toaster } from 'sonner';
 
 const DashboardLayout = async ({
   children
 }: {
   children: React.ReactNode;
 }): Promise<JSX.Element> => {
-  const cookie = cookies().toString();
-  const getBoxes = async (): Promise<any> => {
-    const res = await fetch('http://localhost:4000/box/getBoxes', {
-      credentials: 'include',
-      headers: { Cookie: cookie }
-    });
-    if (!res.ok) {
-      throw new Error('Failed to fetch data');
-    }
-
-    const data = await res.json();
-    return data;
-  };
   const session = await getServerSession();
-  const boxes = await getBoxes();
   return (
-    <Layout user={session?.user} boxes={boxes}>
-      <Suspense fallback={<Loading />}>{children}</Suspense>
-    </Layout>
+    <>
+      <Toaster position="top-center" richColors closeButton />
+      <div className=" z-0 relative flex h-screen overflow-hidden bg-gray-100">
+        <Sidebar />
+        <div className="z-0 relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+          <Header user={session?.user} />
+          <main className="custom-scrollbar overflow-y-auto">
+            <div className="mx-auto max-w-screen-3xl p-6 md:p-10">
+              {children}
+            </div>
+          </main>
+        </div>
+      </div>
+    </>
   );
 };
 export default DashboardLayout;

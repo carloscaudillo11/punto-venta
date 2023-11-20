@@ -1,24 +1,17 @@
-import type { Config } from 'tailwindcss';
+/** @type {import('tailwindcss').Config} */
 import defaultTheme from 'tailwindcss/defaultTheme';
 
-const config: Config = {
+module.exports = {
   content: [
-    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-    './node_modules/@tremor/**/*.{js,ts,jsx,tsx}' // Tremor module
+    './src/**/*.{js,ts,jsx,tsx}',
+    './node_modules/@tremor/**/*.{js,ts,jsx,tsx}'
   ],
   theme: {
     transparent: 'transparent',
     current: 'currentColor',
-    screens: {
-      '2xsm': '375px',
-      xsm: '425px',
-      '3xl': '2000px',
-      ...defaultTheme.screens
-    },
     extend: {
       colors: {
+        // light mode
         tremor: {
           brand: {
             faint: '#eff6ff', // blue-50
@@ -26,8 +19,7 @@ const config: Config = {
             subtle: '#60a5fa', // blue-400
             DEFAULT: '#3b82f6', // blue-500
             emphasis: '#1d4ed8', // blue-700
-            inverted: '#ffffff', // white
-            red: '#f87171' // red-500
+            inverted: '#ffffff' // white
           },
           background: {
             muted: '#f9fafb', // gray-50
@@ -50,7 +42,38 @@ const config: Config = {
           }
         }
       },
+      boxShadow: {
+        // light
+        'tremor-input': '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+        'tremor-card':
+          '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
+        'tremor-dropdown':
+          '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
+        default: '0px 8px 13px -3px rgba(0, 0, 0, 0.07)',
+        card: '0px 1px 3px rgba(0, 0, 0, 0.12)',
+        'card-2': '0px 1px 2px rgba(0, 0, 0, 0.05)',
+        switcher:
+          '0px 2px 4px rgba(0, 0, 0, 0.2), inset 0px 2px 2px #FFFFFF, inset 0px -1px 1px rgba(0, 0, 0, 0.1)',
+        'switch-1': '0px 0px 5px rgba(0, 0, 0, 0.15)',
+        1: '0px 1px 3px rgba(0, 0, 0, 0.08)',
+        2: '0px 1px 4px rgba(0, 0, 0, 0.12)',
+        3: '0px 1px 5px rgba(0, 0, 0, 0.14)',
+        4: '0px 4px 10px rgba(0, 0, 0, 0.12)',
+        5: '0px 1px 1px rgba(0, 0, 0, 0.15)',
+        6: '0px 3px 15px rgba(0, 0, 0, 0.1)',
+        7: '-5px 0 0 #313D4A, 5px 0 0 #313D4A',
+        8: '1px 0 0 #313D4A, -1px 0 0 #313D4A, 0 1px 0 #313D4A, 0 -1px 0 #313D4A, 0 3px 13px rgb(0 0 0 / 8%)'
+      },
+      borderRadius: {
+        'tremor-small': '0.375rem',
+        'tremor-default': '0.5rem',
+        'tremor-full': '9999px'
+      },
       fontSize: {
+        'tremor-label': ['0.75rem'],
+        'tremor-default': ['0.875rem', { lineHeight: '1.25rem' }],
+        'tremor-title': ['1.125rem', { lineHeight: '1.75rem' }],
+        'tremor-metric': ['1.875rem', { lineHeight: '2.25rem' }],
         'title-xxl': ['44px', '55px'],
         'title-xl': ['36px', '45px'],
         'title-xl2': ['33px', '45px'],
@@ -58,10 +81,13 @@ const config: Config = {
         'title-md': ['24px', '30px'],
         'title-md2': ['26px', '30px'],
         'title-sm': ['20px', '26px'],
-        'title-xsm': ['18px', '24px'],
-        'tremor-default': ['0.875rem', '1.25rem'],
-        'tremor-title': ['1.125rem', '1.75rem'],
-        'tremor-metric': ['1.875rem', '2.25rem']
+        'title-xsm': ['18px', '24px']
+      },
+      screens: {
+        '2xsm': '375px',
+        xsm: '425px',
+        '3xl': '2000px',
+        ...defaultTheme.screens
       },
       spacing: {
         4.5: '1.125rem',
@@ -210,38 +236,6 @@ const config: Config = {
       borderWidth: {
         6: '6px'
       },
-      boxShadow: {
-        // light
-        'tremor-input': '0 1px 2px 0 rgb(0 0 0 / 0.05)',
-        'tremor-card':
-          '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
-        'tremor-dropdown':
-          '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
-        default: '0px 8px 13px -3px rgba(0, 0, 0, 0.07)',
-        card: '0px 1px 3px rgba(0, 0, 0, 0.12)',
-        'card-2': '0px 1px 2px rgba(0, 0, 0, 0.05)',
-        switcher:
-          '0px 2px 4px rgba(0, 0, 0, 0.2), inset 0px 2px 2px #FFFFFF, inset 0px -1px 1px rgba(0, 0, 0, 0.1)',
-        'switch-1': '0px 0px 5px rgba(0, 0, 0, 0.15)',
-        1: '0px 1px 3px rgba(0, 0, 0, 0.08)',
-        2: '0px 1px 4px rgba(0, 0, 0, 0.12)',
-        3: '0px 1px 5px rgba(0, 0, 0, 0.14)',
-        4: '0px 4px 10px rgba(0, 0, 0, 0.12)',
-        5: '0px 1px 1px rgba(0, 0, 0, 0.15)',
-        6: '0px 3px 15px rgba(0, 0, 0, 0.1)',
-        7: '-5px 0 0 #313D4A, 5px 0 0 #313D4A',
-        8: '1px 0 0 #313D4A, -1px 0 0 #313D4A, 0 1px 0 #313D4A, 0 -1px 0 #313D4A, 0 3px 13px rgb(0 0 0 / 8%)'
-      },
-      dropShadow: {
-        1: '0px 1px 0px #E2E8F0',
-        2: '0px 1px 4px rgba(0, 0, 0, 0.12)'
-      },
-      keyframes: {
-        rotating: {
-          '0%, 100%': { transform: 'rotate(360deg)' },
-          '50%': { transform: 'rotate(0deg)' }
-        }
-      },
       animation: {
         'ping-once': 'ping 5s cubic-bezier(0, 0, 0.2, 1)',
         rotating: 'rotating 30s linear infinite',
@@ -249,42 +243,46 @@ const config: Config = {
         'spin-2': 'spin 2s linear infinite',
         'spin-3': 'spin 3s linear infinite'
       },
-      borderRadius: {
-        'tremor-small': '0.375rem',
-        'tremor-default': '0.5rem',
-        'tremor-full': '9999px'
+      keyframes: {
+        rotating: {
+          '0%, 100%': { transform: 'rotate(360deg)' },
+          '50%': { transform: 'rotate(0deg)' }
+        }
+      },
+      dropShadow: {
+        1: '0px 1px 0px #E2E8F0',
+        2: '0px 1px 4px rgba(0, 0, 0, 0.12)'
       }
-    },
-    safelist: [
-      {
-        pattern:
-          /^(bg-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
-        variants: ['hover', 'ui-selected']
-      },
-      {
-        pattern:
-          /^(text-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
-        variants: ['hover', 'ui-selected']
-      },
-      {
-        pattern:
-          /^(border-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
-        variants: ['hover', 'ui-selected']
-      },
-      {
-        pattern:
-          /^(ring-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/
-      },
-      {
-        pattern:
-          /^(stroke-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/
-      },
-      {
-        pattern:
-          /^(fill-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/
-      }
-    ]
+    }
   },
-  plugins: [require('@headlessui/react')]
+  safelist: [
+    {
+      pattern:
+        /^(bg-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
+      variants: ['hover', 'ui-selected']
+    },
+    {
+      pattern:
+        /^(text-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
+      variants: ['hover', 'ui-selected']
+    },
+    {
+      pattern:
+        /^(border-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
+      variants: ['hover', 'ui-selected']
+    },
+    {
+      pattern:
+        /^(ring-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/
+    },
+    {
+      pattern:
+        /^(stroke-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/
+    },
+    {
+      pattern:
+        /^(fill-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/
+    }
+  ],
+  plugins: [require('@headlessui/tailwindcss')]
 };
-export default config;

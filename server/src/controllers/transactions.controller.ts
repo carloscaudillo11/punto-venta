@@ -40,9 +40,23 @@ const getTransaction = async (req: Request, res: Response) => {
   }
 };
 
+const getSalesByBox = async (req: Request, res: Response) => {
+  try {
+    const box = req.params.id
+    const transaction = await Transaction.find({box, type:'Venta'});
+    if (!transaction)
+      return res.status(404).json({ message: 'transaction not found' });
+    return res.json(transaction);
+  } catch (error) {
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
+  }
+};
+
 
 export {
   getTransactions,
   createTransaction,
   getTransaction,
+  getSalesByBox
 };

@@ -2,8 +2,8 @@
 import { createContext, useContext, useState } from 'react';
 
 interface ContextProps {
-  boxesOpen: any;
-  setBoxesOpen: React.Dispatch<React.SetStateAction<any>>;
+  sidebarOpen: any;
+  setSidebarOpen: React.Dispatch<React.SetStateAction<any>>;
 }
 
 const Context = createContext<ContextProps | undefined>(undefined);
@@ -19,13 +19,13 @@ export const ContextProvider = ({
 }: {
   children: React.ReactNode;
 }): JSX.Element => {
-  const [boxesOpen, setBoxesOpen] = useState<any>([]);
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
 
   return (
     <Context.Provider
       value={{
-        boxesOpen,
-        setBoxesOpen
+        sidebarOpen,
+        setSidebarOpen
       }}
     >
       {children}

@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "ts-node-dev src/index.ts",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "build": "postcss styles.css -o build.css"
   },
   "keywords": [],
   "author": "",
