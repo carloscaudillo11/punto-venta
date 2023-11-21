@@ -49,6 +49,7 @@ const createOrder = async (req: Request, res: Response) => {
       total,
       paymethod,
       box,
+      user: req.user.id,
     });
     const orderSaved = await newOrder.save();
     if (orderSaved) {
@@ -58,6 +59,7 @@ const createOrder = async (req: Request, res: Response) => {
         date: orderSaved?.date,
         total: total,
         box,
+        user: req.user.id,
       });
       await newTransaction.save();
     }

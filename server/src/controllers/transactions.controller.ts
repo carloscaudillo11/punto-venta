@@ -18,7 +18,8 @@ const createTransaction = async (req: Request, res: Response) => {
       type,
       description,
       total,
-      box
+      box,
+      user: req.user.id,
     });
     const transactionSaved = await newTransaction.save();
     return res.json(transactionSaved);

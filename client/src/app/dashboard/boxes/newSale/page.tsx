@@ -38,7 +38,7 @@ const NewSalePage = async (): Promise<JSX.Element> => {
   return (
     <>
       {box !== null ? (
-        <NewSale menu={menu} box={box} />
+        <NewSale menu={menu} boxes={box} />
       ) : (
         <div className="flex flex-col gap-4">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">

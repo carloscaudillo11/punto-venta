@@ -64,6 +64,7 @@ export interface IOrder extends Document {
   total: number;
   paymethod: PayMethod;
   box: ObjectId;
+  user: ObjectId;
 }
 
 export interface IProduct extends Document {
@@ -122,6 +123,7 @@ export interface ITransactions extends Document {
   date: Date;
   total: number;
   boxCon: ObjectId;
+  user: ObjectId;
 }
 
 declare global {

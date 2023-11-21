@@ -11,20 +11,28 @@ import axios from '@/app/api/axios';
 
 const OpenBox = ({ boxes }: { boxes: any }): JSX.Element => {
   const [openModalForm, setOpenModalForm] = useState<boolean>(false);
-  const [sales] = useState<number>(100);
+  const [sales, setSales] = useState<number>(0);
 
   useEffect(() => {
     if (boxes !== null) {
       const fetchData = async (): Promise<void> => {
         try {
-          const id = boxes.box._id;
+          const id = boxes._id;
           const response = await axios.get(
             `/transactions/getSalesByBox/${id}`,
             {
               withCredentials: true
             }
           );
-          console.log(response.data); // Muestra los datos en la consola
+          // Sumar todos los totales de las ventas
+          const totalSales = response.data.reduce(
+            (accumulator: any, sale: { total: any }) =>
+              accumulator + sale.total,
+            0
+          );
+
+          // Guardar el resultado en el estado 'sales'
+          setSales(totalSales);
         } catch (error) {
           console.error('Error al obtener datos:', error);
         }
@@ -98,7 +106,7 @@ const OpenBox = ({ boxes }: { boxes: any }): JSX.Element => {
             </Card>
             <Card className="max-w-md" decoration="top">
               <Text>Ventas</Text>
-              <Metric>$ {sales}</Metric>
+              <Metric>$ {sales.toFixed(2)}</Metric>
             </Card>
             <Card className="max-w-md" decoration="top">
               <Text>Total a Rendir</Text>

@@ -22,15 +22,23 @@ import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { type Menu } from '@/types';
 import React, { useState, useEffect } from 'react';
+import axios from '@/app/api/axios';
+import { toast } from 'sonner';
 
-const NewSale = ({ menu, box }: { menu: Menu[]; box: any }): JSX.Element => {
+const NewSale = ({
+  menu,
+  boxes
+}: {
+  menu: Menu[];
+  boxes: any;
+}): JSX.Element => {
   const [filtro, setFiltro] = useState('');
   const [productosFiltrados, setProductosFiltrados] = useState<Menu[]>([]);
   const [productos, setProductos] = useState<any>([]);
   const [inputValue, setInputValue] = useState('');
   const [cantidades, setCantidades] = useState<Record<string, number>>({});
   const [payMethod, setPayMethod] = useState('');
-  const [mesa, setMesa] = useState<number>();
+  const [mesa, setMesa] = useState<number>(0);
   const [total, setTotal] = useState<number>(0);
   const [subTotal, setSubTotal] = useState<number>(0);
   const [iva, setIva] = useState<number>(0);
@@ -111,6 +119,45 @@ const NewSale = ({ menu, box }: { menu: Menu[]; box: any }): JSX.Element => {
       calcularTotal(calcularSubtotal(), calcularIVA(calcularSubtotal()))
     );
   }, [cantidades, productos]);
+
+  const onSubmit = (e: any): void => {
+    e.preventDefault();
+    const fetch = async (): Promise<any> => {
+      const table = mesa;
+      const box = boxes._id;
+      const paymethod = payMethod;
+      const res = await axios.post(
+        '/orders/createOrder',
+        { table, box, total, paymethod },
+        { withCredentials: true }
+      );
+      return res.data;
+    };
+    const promise = fetch();
+    toast.promise(promise, {
+      loading: 'Loading...',
+      success: () => {
+        resetStates();
+        return 'Orden registrada con exito';
+      },
+      error: (err) => {
+        return err.response.data.message;
+      }
+    });
+  };
+
+  const resetStates = (): void => {
+    setFiltro('');
+    setProductosFiltrados([]);
+    setProductos([]);
+    setInputValue('');
+    setCantidades({});
+    setPayMethod('');
+    setMesa(0);
+    setTotal(0);
+    setSubTotal(0);
+    setIva(0);
+  };
 
   return (
     <div className="flex flex-col gap-6 py-2">
@@ -283,7 +330,11 @@ const NewSale = ({ menu, box }: { menu: Menu[]; box: any }): JSX.Element => {
                 <TableFoot>
                   <TableRow>
                     <TableFooterCell>
-                      <Button className="w-full mt-3" variant="primary">
+                      <Button
+                        className="w-full mt-3"
+                        variant="primary"
+                        onClick={onSubmit}
+                      >
                         Finalizar orden
                       </Button>
                     </TableFooterCell>
