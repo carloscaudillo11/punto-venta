@@ -23,11 +23,6 @@ type TProduct = {
   amount: number;
 };
 
-type Menu_Element = {
-  element: ObjectId;
-  amount: number;
-};
-
 type TProducts = {
   element: ObjectId;
   amount: number;
@@ -61,13 +56,7 @@ export interface IBox extends Document {
 
 export interface IOrder extends Document {
   table: number | null;
-  room: number | null;
   date: Date;
-  order_type: OrderType;
-  menu_elements: {
-    element: ObjectId;
-    amount: number;
-  }[];
   products: {
     element: ObjectId;
     amount: number;

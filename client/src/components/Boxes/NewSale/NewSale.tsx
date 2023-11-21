@@ -2,7 +2,6 @@
 import {
   Card,
   Text,
-  Metric,
   TextInput,
   Title,
   Table,
@@ -11,18 +10,30 @@ import {
   TableHead,
   TableHeaderCell,
   TableRow,
-  Button
+  Button,
+  Bold,
+  Select,
+  SelectItem,
+  TableFoot,
+  TableFooterCell,
+  NumberInput
 } from '@tremor/react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { type Menu } from '@/types';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const NewSale = ({ menu }: { menu: Menu[] }): JSX.Element => {
+const NewSale = ({ menu, box }: { menu: Menu[]; box: any }): JSX.Element => {
   const [filtro, setFiltro] = useState('');
   const [productosFiltrados, setProductosFiltrados] = useState<Menu[]>([]);
   const [productos, setProductos] = useState<any>([]);
   const [inputValue, setInputValue] = useState('');
+  const [cantidades, setCantidades] = useState<Record<string, number>>({});
+  const [payMethod, setPayMethod] = useState('');
+  const [mesa, setMesa] = useState<number>();
+  const [total, setTotal] = useState<number>(0);
+  const [subTotal, setSubTotal] = useState<number>(0);
+  const [iva, setIva] = useState<number>(0);
 
   const handleInputChange = (e: any): void => {
     setInputValue(e.target.value);
@@ -35,10 +46,71 @@ const NewSale = ({ menu }: { menu: Menu[] }): JSX.Element => {
     setProductosFiltrados(productosFiltrados);
   };
 
+  const agregarProducto = (producto: Menu): void => {
+    setFiltro('');
+    setInputValue('');
+    setProductos([...productos, producto]);
+
+    setCantidades((prevCantidades) => ({
+      ...prevCantidades,
+      [producto._id]: prevCantidades[producto._id]
+        ? prevCantidades[producto._id] + 1
+        : 1
+    }));
+  };
+
   const handleDelete = (id: number): void => {
     const nuevosProductos = productos.filter((item: Menu) => item._id !== id);
     setProductos(nuevosProductos);
+
+    setCantidades((prevCantidades) => {
+      const nuevasCantidades = { ...prevCantidades };
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+      delete nuevasCantidades[id];
+      return nuevasCantidades;
+    });
   };
+
+  const handleIncreaseQuantity = (id: number): void => {
+    setCantidades((prevCantidades) => ({
+      ...prevCantidades,
+      [id]: (prevCantidades[id] || 0) + 1
+    }));
+  };
+
+  const handleDecreaseQuantity = (id: number): void => {
+    if (cantidades[id] > 1) {
+      setCantidades((prevCantidades) => ({
+        ...prevCantidades,
+        [id]: prevCantidades[id] - 1
+      }));
+    }
+  };
+
+  useEffect(() => {
+    const calcularIVA = (subtotal: number): number => {
+      const iva = subtotal * 0.16; // 16% de IVA
+      return iva;
+    };
+
+    const calcularTotal = (subtotal: number, iva: number): number => {
+      const total = subtotal + iva;
+      return total;
+    };
+
+    const calcularSubtotal = (): number => {
+      let subtotal = 0;
+      productos.forEach((producto: Menu) => {
+        subtotal += producto.price * (cantidades[producto._id] || 1);
+      });
+      return subtotal;
+    };
+    setSubTotal(calcularSubtotal());
+    setIva(calcularIVA(calcularSubtotal()));
+    setTotal(
+      calcularTotal(calcularSubtotal(), calcularIVA(calcularSubtotal()))
+    );
+  }, [cantidades, productos]);
 
   return (
     <div className="flex flex-col gap-6 py-2">
@@ -46,11 +118,11 @@ const NewSale = ({ menu }: { menu: Menu[] }): JSX.Element => {
         Registrar Venta
       </h1>
       <div className="flex flex-col gap-3 sm:flex-row">
-        <div className="w-full sm:w-3/5">
-          <Card className="flex flex-col gap-5">
+        <div className="w-full sm:w-8/12">
+          <Card className="flex flex-col gap-5 sm:p-8">
             <div className="flex flex-col sm:flex-row justify-between items-center">
-              <Title className="w-full sm:w-3/5 text-slate-600">
-                Productos
+              <Title className="w-full sm:w-3/5">
+                <Bold>Productos</Bold>
               </Title>
               <div className="w-full sm:w-2/5 flex flex-col mt-2">
                 <TextInput
@@ -70,9 +142,7 @@ const NewSale = ({ menu }: { menu: Menu[] }): JSX.Element => {
                         className="cursor-pointer hover:bg-gray-100 p-2 rounded-md"
                         key={producto._id}
                         onClick={() => {
-                          setFiltro('');
-                          setInputValue('');
-                          setProductos([...productos, producto]);
+                          agregarProducto(producto);
                         }}
                       >
                         <Text>{producto.name}</Text>
@@ -90,7 +160,7 @@ const NewSale = ({ menu }: { menu: Menu[] }): JSX.Element => {
                     <TableHeaderCell>Categoria</TableHeaderCell>
                     <TableHeaderCell>Precio</TableHeaderCell>
                     <TableHeaderCell>Cantidad</TableHeaderCell>
-                    <TableHeaderCell>Eliminar</TableHeaderCell>
+                    <TableHeaderCell>Quitar</TableHeaderCell>
                   </TableRow>
                 </TableHead>
 
@@ -113,14 +183,26 @@ const NewSale = ({ menu }: { menu: Menu[] }): JSX.Element => {
                       <TableCell>${item.price}</TableCell>
                       <TableCell>
                         <div className="flex items-center">
-                          <Button className="w-8 h-8" variant="secondary">
-                            +
+                          <Button
+                            className="w-8 h-8"
+                            variant="secondary"
+                            onClick={() => {
+                              handleDecreaseQuantity(item._id);
+                            }}
+                          >
+                            -
                           </Button>
                           <div className="w-8 h-8 border rounded-md border-gray-300 flex items-center justify-center">
-                            <Text>1</Text>
+                            <Text>{cantidades[item._id]}</Text>
                           </div>
-                          <Button className="w-8 h-8" variant="secondary">
-                            -
+                          <Button
+                            className="w-8 h-8"
+                            variant="secondary"
+                            onClick={() => {
+                              handleIncreaseQuantity(item._id);
+                            }}
+                          >
+                            +
                           </Button>
                         </div>
                       </TableCell>
@@ -141,10 +223,74 @@ const NewSale = ({ menu }: { menu: Menu[] }): JSX.Element => {
             </div>
           </Card>
         </div>
-        <div className="w-full sm:w-2/5">
-          <Card className="h-96">
-            <Text>Title</Text>
-            <Metric>KPI 2</Metric>
+        <div className="w-full sm:w-4/12">
+          <Card className="sm:p-8">
+            <div className="flex flex-col gap-4">
+              <Title>
+                <Bold>Resumen de la orden</Bold>
+              </Title>
+              <Table>
+                <TableBody>
+                  <TableRow className="flex justify-between">
+                    <TableCell>SubTotal</TableCell>
+                    <TableCell>
+                      <Bold>${subTotal.toFixed(2)}</Bold>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow className="flex justify-between">
+                    <TableCell>IVA</TableCell>
+                    <TableCell>
+                      <Bold>${iva.toFixed(2)}</Bold>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow className="flex justify-between items-center">
+                    <TableCell>Metodo de pago</TableCell>
+                    <TableCell>
+                      <Select value={payMethod} onValueChange={setPayMethod}>
+                        <SelectItem value="Efectivo">
+                          <Text>Efectivo</Text>
+                        </SelectItem>
+                        <SelectItem value="Tarjeta">
+                          <Text>Tarjeta</Text>
+                        </SelectItem>
+                      </Select>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow className="flex justify-between items-center">
+                    <TableCell>Mesa</TableCell>
+                    <TableCell>
+                      <NumberInput
+                        value={mesa}
+                        onValueChange={(value: number) => {
+                          setMesa(value);
+                        }}
+                        min={1}
+                        max={10}
+                      />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow className="flex justify-between">
+                    <TableCell>
+                      <Title>
+                        <Bold>Total</Bold>
+                      </Title>
+                    </TableCell>
+                    <TableCell>
+                      <Bold>${total.toFixed(2)}</Bold>
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+                <TableFoot>
+                  <TableRow>
+                    <TableFooterCell>
+                      <Button className="w-full mt-3" variant="primary">
+                        Finalizar orden
+                      </Button>
+                    </TableFooterCell>
+                  </TableRow>
+                </TableFoot>
+              </Table>
+            </div>
           </Card>
         </div>
       </div>

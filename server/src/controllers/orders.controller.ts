@@ -2,12 +2,11 @@ import Order from '../models/order.model';
 import Product from '../models/product.model';
 import Transaction from '../models/transaction.model';
 import { Request, Response } from 'express';
-import { TProduct, Menu_Element } from '../../types';
+import { TProduct } from '../../types';
 
 const getOrders = async (_req: Request, res: Response) => {
   try {
     const orders = await Order.find()
-      .populate('menu_elements.element')
       .populate('products.element')
       .populate('box');
     res.json(orders);
@@ -19,22 +18,14 @@ const getOrders = async (_req: Request, res: Response) => {
 
 const createOrder = async (req: Request, res: Response) => {
   let table!: number;
-  let room!: number;
-  let menu_elements!: Menu_Element[];
   let products!: TProduct[];
 
   try {
-    const { order_type, total, box, paymethod } = req.body;
+    const { total, box, paymethod } = req.body;
 
     if (req.body?.table) {
       table = req.body?.table;
     }
-
-    if (req.body?.room) {
-      room = req.body?.room;
-    }
-
-    if (req.body?.menu_elements) menu_elements = req.body?.menu_elements;
 
     if (req.body?.products) {
       products = req.body?.products;
@@ -54,9 +45,6 @@ const createOrder = async (req: Request, res: Response) => {
 
     const newOrder = new Order({
       table,
-      room,
-      order_type,
-      menu_elements,
       products,
       total,
       paymethod,
@@ -66,7 +54,7 @@ const createOrder = async (req: Request, res: Response) => {
     if (orderSaved) {
       const newTransaction = new Transaction({
         type: 'Venta',
-        description: `Orden de ${order_type}`,
+        description: `Venta del pedido ${orderSaved._id}`,
         date: orderSaved?.date,
         total: total,
         box,
@@ -84,8 +72,7 @@ const createOrder = async (req: Request, res: Response) => {
 const getOrder = async (req: Request, res: Response) => {
   try {
     const order = await Order.findById(req.params.id)
-      .populate('products')
-      .populate('menu_elements')
+      .populate('products.element')
       .populate('box');
     if (!order) return res.status(404).json({ message: 'Order not found' });
     return res.json(order);

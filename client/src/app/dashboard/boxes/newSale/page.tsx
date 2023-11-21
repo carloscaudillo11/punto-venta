@@ -32,13 +32,13 @@ const getMenu = async (): Promise<any> => {
 };
 
 const NewSalePage = async (): Promise<JSX.Element> => {
-  const boxes = await getBoxes();
+  const box = await getBoxes();
   const menu = await getMenu();
 
   return (
     <>
-      {boxes !== null ? (
-        <NewSale menu={menu} />
+      {box !== null ? (
+        <NewSale menu={menu} box={box} />
       ) : (
         <div className="flex flex-col gap-4">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900">
