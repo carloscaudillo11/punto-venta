@@ -2,9 +2,10 @@ import BoxCon from '../models/boxCon.model';
 import Box from '../models/box.model';
 import { Request, Response } from 'express';
 
-const getBoxesOpen = async (_req: Request, res: Response) => {
+const getBoxesOpen = async (req: Request, res: Response) => {
   try {
-    const boxes = await BoxCon.findOne({status: "Abierta"}).populate('user').populate('box');
+    console.log(req.user.id);
+    const boxes = await BoxCon.findOne({user: req.user.id,}).populate('user').populate('box');
     res.json(boxes);
   } catch (error) {
     if (error instanceof Error)

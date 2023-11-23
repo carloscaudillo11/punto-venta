@@ -83,7 +83,7 @@ const TableMenu = ({ menu }: { menu: Menu[] }): JSX.Element => {
           <Icon
             icon={InformationCircleIcon}
             variant="simple"
-            tooltip="Shows sales performance per employee"
+            tooltip="Muestra los productos del menu"
           />
         </Flex>
       </div>

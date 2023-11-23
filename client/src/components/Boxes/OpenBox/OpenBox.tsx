@@ -2,14 +2,20 @@
 import {
   InboxIcon,
   InformationCircleIcon,
-  TvIcon
+  TvIcon,
+  SignalIcon
 } from '@heroicons/react/24/solid';
 import ModalOpenBox from '@/components/Modal/ModalOpenBox';
 import { useEffect, useState } from 'react';
-import { Card, Metric, Text, Button } from '@tremor/react';
-import axios from '@/app/api/axios';
+import { Card, Metric, Text, Button, Badge } from '@tremor/react';
 
-const OpenBox = ({ boxes }: { boxes: any }): JSX.Element => {
+const OpenBox = ({
+  boxes,
+  ventas
+}: {
+  boxes: any;
+  ventas: any;
+}): JSX.Element => {
   const [openModalForm, setOpenModalForm] = useState<boolean>(false);
   const [sales, setSales] = useState<number>(0);
 
@@ -17,15 +23,8 @@ const OpenBox = ({ boxes }: { boxes: any }): JSX.Element => {
     if (boxes !== null) {
       const fetchData = async (): Promise<void> => {
         try {
-          const id = boxes._id;
-          const response = await axios.get(
-            `/transactions/getSalesByBox/${id}`,
-            {
-              withCredentials: true
-            }
-          );
           // Sumar todos los totales de las ventas
-          const totalSales = response.data.reduce(
+          const totalSales = ventas.reduce(
             (accumulator: any, sale: { total: any }) =>
               accumulator + sale.total,
             0
@@ -40,7 +39,7 @@ const OpenBox = ({ boxes }: { boxes: any }): JSX.Element => {
 
       void fetchData();
     }
-  }, [boxes]);
+  }, [boxes, ventas]);
 
   let formattedDate = '';
   if (boxes !== null) {
@@ -66,14 +65,12 @@ const OpenBox = ({ boxes }: { boxes: any }): JSX.Element => {
               <div className="flex flex-col gap-5 md:flex-row md:justify-between md:items-center">
                 <div className="flex gap-4">
                   <TvIcon className="w-10 h-15 text-blue-700" />
-                  <div className="flex flex-col">
+                  <div className="flex flex-col gap-2">
                     <div className="flex gap-3">
                       <p className="text-gray-700 text-md font-semibold">
                         {boxes.box.name}
                       </p>
-                      <p className="text-green-700 text-sm font-medium bg-green-200 px-1 rounded-md">
-                        {boxes.status}
-                      </p>
+                      <Badge icon={SignalIcon}>{boxes.status}</Badge>
                     </div>
                     <div className="flex gap-2">
                       <p className="text-gray-500 text-sm font-medium">

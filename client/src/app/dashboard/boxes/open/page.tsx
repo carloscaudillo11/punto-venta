@@ -16,8 +16,26 @@ const getBoxes = async (): Promise<any> => {
 };
 
 const OpenBoxPage = async (): Promise<JSX.Element> => {
+  let ventas;
+  const cookie = cookies().toString();
   const boxes = await getBoxes();
-  return <OpenBox boxes={boxes} />;
+  if (boxes !== null) {
+    const id = boxes._id;
+    const res = await fetch(
+      `http://localhost:4000/transactions/getSalesByBox/${id}`,
+      {
+        credentials: 'include',
+        headers: { Cookie: cookie }
+      }
+    );
+    if (!res.ok) {
+      throw new Error('Failed to fetch data');
+    }
+    ventas = await res.json();
+  } else {
+    ventas = null;
+  }
+  return <OpenBox boxes={boxes} ventas={ventas} />;
 };
 
 export default OpenBoxPage;

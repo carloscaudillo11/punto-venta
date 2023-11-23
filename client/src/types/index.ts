@@ -1,3 +1,5 @@
+type transactionType = 'Venta' | 'Gasto';
+
 export interface User {
   _id: number;
   name: string;
@@ -20,10 +22,12 @@ export interface Menu {
   };
 }
 
-export interface FormData {
-  name: string;
+export interface Transactions extends Document {
+  _id: number;
+  type: transactionType;
   description: string;
-  category_Menu: string;
-  price: number;
-  image: File | null;
+  date: Date;
+  total: number;
+  boxCon: number;
+  user: number;
 }

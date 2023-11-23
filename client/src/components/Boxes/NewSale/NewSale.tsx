@@ -37,7 +37,7 @@ const NewSale = ({
   const [productos, setProductos] = useState<any>([]);
   const [inputValue, setInputValue] = useState('');
   const [cantidades, setCantidades] = useState<Record<string, number>>({});
-  const [payMethod, setPayMethod] = useState('');
+  const [payMethod, setPayMethod] = useState('Efectivo');
   const [mesa, setMesa] = useState<number>(0);
   const [total, setTotal] = useState<number>(0);
   const [subTotal, setSubTotal] = useState<number>(0);
@@ -122,28 +122,32 @@ const NewSale = ({
 
   const onSubmit = (e: any): void => {
     e.preventDefault();
-    const fetch = async (): Promise<any> => {
-      const table = mesa;
-      const box = boxes._id;
-      const paymethod = payMethod;
-      const res = await axios.post(
-        '/orders/createOrder',
-        { table, box, total, paymethod },
-        { withCredentials: true }
-      );
-      return res.data;
-    };
-    const promise = fetch();
-    toast.promise(promise, {
-      loading: 'Loading...',
-      success: () => {
-        resetStates();
-        return 'Orden registrada con exito';
-      },
-      error: (err) => {
-        return err.response.data.message;
-      }
-    });
+    if (total !== 0) {
+      const fetch = async (): Promise<any> => {
+        const table = mesa;
+        const box = boxes._id;
+        const paymethod = payMethod;
+        const res = await axios.post(
+          '/orders/createOrder',
+          { table, box, total, paymethod },
+          { withCredentials: true }
+        );
+        return res.data;
+      };
+      const promise = fetch();
+      toast.promise(promise, {
+        loading: 'Loading...',
+        success: () => {
+          resetStates();
+          return 'Orden registrada con exito';
+        },
+        error: (err) => {
+          return err.response.data.message;
+        }
+      });
+    } else {
+      toast.error('No hay productos en la orden');
+    }
   };
 
   const resetStates = (): void => {
@@ -335,7 +339,7 @@ const NewSale = ({
                         variant="primary"
                         onClick={onSubmit}
                       >
-                        Finalizar orden
+                        Realizar orden
                       </Button>
                     </TableFooterCell>
                   </TableRow>

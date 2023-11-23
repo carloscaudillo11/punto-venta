@@ -101,7 +101,7 @@ const TableBoxes = ({ boxes }: { boxes: Boxes[] }): JSX.Element => {
           <Icon
             icon={InformationCircleIcon}
             variant="simple"
-            tooltip="Shows sales performance per employee"
+            tooltip="Muestra las cajas registradas"
           />
         </Flex>
       </div>
