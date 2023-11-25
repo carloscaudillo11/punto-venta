@@ -5,7 +5,7 @@ import { Request, Response } from 'express';
 const getBoxesOpen = async (req: Request, res: Response) => {
   try {
     console.log(req.user.id);
-    const boxes = await BoxCon.findOne({user: req.user.id,}).populate('user').populate('box');
+    const boxes = await BoxCon.findOne({user: req.user.id, status: "Abierta"}).populate('user').populate('box');
     res.json(boxes);
   } catch (error) {
     if (error instanceof Error)
@@ -35,10 +35,11 @@ const openBox = async (req: Request, res: Response) => {
 
 const closeBox = async (req: Request, res: Response) => {
   try {
+    const id = req.params.id;
     const { finalAmount, box } = req.body;
 
     const boxUpdated = await BoxCon.findByIdAndUpdate(
-      box,
+      id,
       { finalAmount, status: 'Cerrada' },
       { new: true }
     );

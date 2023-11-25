@@ -13,9 +13,13 @@ const DashboardLayout = async ({
     <>
       <Toaster position="top-center" richColors closeButton />
       <div className=" z-0 relative flex h-screen overflow-hidden bg-gray-100">
-        <Sidebar />
+        <aside>
+          <Sidebar />
+        </aside>
         <div className="z-0 relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
-          <Header user={session?.user} />
+          <header>
+            <Header user={session?.user} />
+          </header>
           <main className="custom-scrollbar overflow-y-auto">
             <div className="mx-auto max-w-screen-3xl p-6 md:p-10">
               {children}

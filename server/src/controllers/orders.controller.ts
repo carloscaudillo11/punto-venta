@@ -3,6 +3,7 @@ import Product from '../models/product.model';
 import Transaction from '../models/transaction.model';
 import { Request, Response } from 'express';
 import { TProduct } from '../../types';
+import printerTicket from '../libs/printTicket';
 
 const getOrders = async (_req: Request, res: Response) => {
   try {
@@ -15,6 +16,19 @@ const getOrders = async (_req: Request, res: Response) => {
       return res.status(500).json({ message: error.message });
   }
 };
+
+const getOrdersByBox = async (req: Request, res: Response) => {
+  try {
+    const box = req.params.id;
+    const orders = await Order.find({ box })
+      .populate('products.element')
+      .populate('box');
+    res.json(orders);
+  } catch (error) {
+    if (error instanceof Error)
+      return res.status(500).json({ message: error.message });
+  }
+}
 
 const createOrder = async (req: Request, res: Response) => {
   let table!: number;
@@ -62,6 +76,7 @@ const createOrder = async (req: Request, res: Response) => {
         user: req.user.id,
       });
       await newTransaction.save();
+      printerTicket();
     }
 
     return res.json(orderSaved);
@@ -89,4 +104,5 @@ export {
   getOrders,
   createOrder,
   getOrder,
+  getOrdersByBox
 };

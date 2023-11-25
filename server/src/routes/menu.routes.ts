@@ -10,9 +10,9 @@ import auth from '../middlewares/auth.middleware';
 
 const router: Router = Router();
 
-router.get('/getMenu', auth, getMenu);
+router.get('/getMenu', getMenu);
 router.post('/createMenuElement', auth, createMenuElement);
-router.get('/getMenuElement/:id', auth, getMenuElement);
+router.get('/getMenuElement/:id', getMenuElement);
 router.put('/updateMenuElement/:id', auth, updateMenuElement);
 router.delete('/deleteMenuElement/:id', auth, deleteMenuElement);
 

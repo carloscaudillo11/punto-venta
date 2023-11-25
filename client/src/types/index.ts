@@ -1,4 +1,5 @@
 type transactionType = 'Venta' | 'Gasto';
+type PayMethod = 'Tarjeta' | 'Efectivo';
 
 export interface User {
   _id: number;
@@ -22,12 +23,26 @@ export interface Menu {
   };
 }
 
-export interface Transactions extends Document {
+export interface Transaction {
   _id: number;
   type: transactionType;
   description: string;
   date: Date;
   total: number;
   boxCon: number;
+  user: number;
+}
+
+export interface Order {
+  _id: number;
+  table: number | null;
+  date: Date;
+  products: Array<{
+    element: number;
+    amount: number;
+  }>;
+  total: number;
+  paymethod: PayMethod;
+  box: number;
   user: number;
 }

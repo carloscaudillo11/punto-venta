@@ -8,6 +8,9 @@ import {
 import ModalOpenBox from '@/components/Modal/ModalOpenBox';
 import { useEffect, useState } from 'react';
 import { Card, Metric, Text, Button, Badge } from '@tremor/react';
+import { toast } from 'sonner';
+import axios from '@/app/api/axios';
+import { useRouter } from 'next/navigation';
 
 const OpenBox = ({
   boxes,
@@ -18,26 +21,21 @@ const OpenBox = ({
 }): JSX.Element => {
   const [openModalForm, setOpenModalForm] = useState<boolean>(false);
   const [sales, setSales] = useState<number>(0);
+  const [total, setTotal] = useState<number>(0);
+  const router = useRouter();
 
   useEffect(() => {
     if (boxes !== null) {
-      const fetchData = async (): Promise<void> => {
-        try {
-          // Sumar todos los totales de las ventas
-          const totalSales = ventas.reduce(
-            (accumulator: any, sale: { total: any }) =>
-              accumulator + sale.total,
-            0
-          );
-
-          // Guardar el resultado en el estado 'sales'
-          setSales(totalSales);
-        } catch (error) {
-          console.error('Error al obtener datos:', error);
-        }
-      };
-
-      void fetchData();
+      try {
+        const totalSales = ventas.reduce(
+          (accumulator: any, sale: { total: any }) => accumulator + sale.total,
+          0
+        );
+        setSales(totalSales);
+        setTotal(boxes.startingAmount + totalSales);
+      } catch (error) {
+        console.error('Error al obtener datos:', error);
+      }
     }
   }, [boxes, ventas]);
 
@@ -52,6 +50,34 @@ const OpenBox = ({
   } else {
     formattedDate = 'N/A';
   }
+
+  const corteCaja = async (): Promise<void> => {
+    const fetch = async (): Promise<any> => {
+      const box = boxes.box._id;
+      const id = boxes._id;
+      const finalAmount = total;
+      const res = await axios.put(
+        `/boxCon/closeBox/${id}`,
+        { box, finalAmount },
+        {
+          withCredentials: true
+        }
+      );
+      return res.data;
+    };
+
+    const promise = fetch();
+    toast.promise(promise, {
+      loading: 'Loading...',
+      success: () => {
+        router.refresh();
+        return 'Corte de caja exitoso!';
+      },
+      error: (err) => {
+        return err.response.data.message;
+      }
+    });
+  };
 
   return (
     <>
@@ -91,7 +117,9 @@ const OpenBox = ({
                   </div>
                 </div>
                 <div className="flex justify-center">
-                  <Button icon={InboxIcon}>Corte de Caja</Button>
+                  <Button icon={InboxIcon} onClick={corteCaja}>
+                    Corte de Caja
+                  </Button>
                 </div>
               </div>
             </div>
@@ -107,7 +135,7 @@ const OpenBox = ({
             </Card>
             <Card className="max-w-md" decoration="top">
               <Text>Total a Rendir</Text>
-              <Metric>$ {boxes.startingAmount + sales}</Metric>
+              <Metric>$ {total.toFixed(2)}</Metric>
             </Card>
           </div>
         </div>

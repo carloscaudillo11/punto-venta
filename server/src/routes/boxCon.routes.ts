@@ -10,6 +10,6 @@ const router: Router = Router();
 
 router.get('/getBoxes', auth, getBoxesOpen);
 router.post('/openBox', auth, openBox);
-router.put('/closeBox', auth, closeBox);
+router.put('/closeBox/:id', auth, closeBox);
 
 export default router;
