@@ -1,34 +1,27 @@
-import { printer, types } from 'node-thermal-printer';
+import escpos, { Printer } from 'escpos';
 
-const printerTicket = () => {
-  // Configurar la impresora térmica
-  const printe = new printer({
-    type: types.EPSON,
-    interface: 'tcp://192.168.1.23',
+const printTicket = (): void => {
+  const device = new (escpos as any).Network('192.168.56.1', 9100);
+  const options = { encoding: 'GB18030' /* default */ };
+  const printer = new Printer(device, options);
+
+  // Abrir la conexión con la impresora
+  device.open((error?: Error) => {
+    if (error) {
+      console.error('Error al abrir la conexión:', error);
+      return;
+    }
+
+    // Enviar comandos de impresión
+    printer
+      .text('¡Hola, mundo!\n')
+      .cut()
+      .close((error?: Error) => {
+        if (error) {
+          console.error('Error al cerrar la conexión:', error);
+        }
+      });
   });
-
-  // Definir el contenido del ticket
-  const content = [
-    '¡Bienvenido a Mi Tienda!',
-    '------------------------',
-    'Producto 1: $10.00',
-    'Producto 2: $20.00',
-    '------------------------',
-    'Total: $30.00',
-    'Gracias por tu compra',
-  ];
-
-  printe.alignCenter();
-  printe.setTextDoubleHeight();
-  printe.setTextDoubleWidth();
-  printe.bold(true);
-  printe.println('TICKET DE COMPRA');
-  printe.bold(false);
-  printe.setTextNormal();
-  content.forEach((line) => printe.println(line));
-
-  printe.cut();
-  printe.execute();
 };
 
-export default printerTicket;
+export default printTicket;

@@ -88,16 +88,7 @@ export interface IMenu extends Document {
 export interface IProvider extends Document {
   name: string;
   lastname: string;
-  nif_rif: number;
-  address: {
-    street: string;
-    city: string;
-    state: string;
-    postal_code: string;
-    country: string;
-  };
   contact: {
-    contact_name: string;
     email: string;
     phone: number;
   };

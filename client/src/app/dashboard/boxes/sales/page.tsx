@@ -6,7 +6,6 @@ import {
   InboxIcon
 } from '@heroicons/react/24/solid';
 import Link from 'next/link';
-export const dynamic = 'force-dynamic';
 
 const getBoxes = async (): Promise<any> => {
   const cookie = cookies().toString();

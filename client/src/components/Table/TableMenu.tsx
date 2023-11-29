@@ -59,7 +59,7 @@ const TableMenu = ({ menu }: { menu: Menu[] }): JSX.Element => {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentBoxes = menu
+  const currentMenu = menu
     .filter((item) => isMenuSelected(item))
     .slice(indexOfFirstItem, indexOfLastItem);
 
@@ -123,21 +123,18 @@ const TableMenu = ({ menu }: { menu: Menu[] }): JSX.Element => {
           </TableHead>
 
           <TableBody>
-            {currentBoxes.map((item) => (
+            {currentMenu.map((item) => (
               <TableRow key={item._id}>
                 {item.image && (
                   <TableCell>
                     <img
                       src={item.image.url}
                       alt={item.name}
-                      className="w-25 h-15 rounded-sm"
+                      className="w-25 h-15 rounded-lg"
                     />
                   </TableCell>
                 )}
                 <TableCell>{item.name}</TableCell>
-                {/* <TableCell className="break-words">
-                  {item.description}
-                </TableCell> */}
                 <TableCell className="break-words">
                   {item.category_Menu}
                 </TableCell>

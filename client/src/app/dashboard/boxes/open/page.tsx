@@ -1,6 +1,5 @@
 import OpenBox from '@/components/Boxes/OpenBox/OpenBox';
 import { cookies } from 'next/headers';
-export const dynamic = 'force-dynamic';
 
 const getBoxes = async (): Promise<any> => {
   const cookie = cookies().toString();

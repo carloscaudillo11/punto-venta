@@ -21,11 +21,15 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import axios from '@/app/api/axios';
 import { useState } from 'react';
-import { type IUser } from '@/types';
+import { type Provider } from '@/types';
 
-const TableUsers = ({ users }: { users: IUser[] }): JSX.Element => {
-  const [selectedRole, setSelectedRole] = useState('all');
-  const [selectedEmail, setSelecteEmail] = useState<string[]>([]);
+const TableProviders = ({
+  providers
+}: {
+  providers: Provider[];
+}): JSX.Element => {
+  const [selectedStatus, setSelectedStatus] = useState('all');
+  const [selectedNames, setSelectedNames] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
 
@@ -34,7 +38,7 @@ const TableUsers = ({ users }: { users: IUser[] }): JSX.Element => {
   const Delete = async (id: any): Promise<void> => {
     const fetch = async (): Promise<any> => {
       const res = await axios.delete(
-        `http://localhost:4000/auth/deleteUser/${id}`,
+        `http://localhost:4000/menu/deleteMenuElement/${id}`,
         { withCredentials: true }
       );
       return res.data;
@@ -45,7 +49,7 @@ const TableUsers = ({ users }: { users: IUser[] }): JSX.Element => {
       loading: 'Loading...',
       success: () => {
         router.refresh();
-        return 'Usuario eliminado exitosamente!';
+        return 'Elemento eliminada exitosamente!';
       },
       error: (err) => {
         return err.response.data.message;
@@ -53,18 +57,18 @@ const TableUsers = ({ users }: { users: IUser[] }): JSX.Element => {
     });
   };
 
-  const isUserSelected = (user: IUser): boolean =>
-    (user.role === selectedRole || selectedRole === 'all') &&
-    (selectedEmail.includes(user.email) || selectedEmail.length === 0);
+  const isMenuSelected = (providers: Provider): boolean =>
+    (providers.status === selectedStatus || selectedStatus === 'all') &&
+    (selectedNames.includes(providers.name) || selectedNames.length === 0);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentUsers = users
-    .filter((item) => isUserSelected(item))
+  const currentProviders = providers
+    .filter((item) => isMenuSelected(item))
     .slice(indexOfFirstItem, indexOfLastItem);
 
   const totalPages = Math.ceil(
-    users.filter((item) => isUserSelected(item)).length / itemsPerPage
+    providers.filter((item) => isMenuSelected(item)).length / itemsPerPage
   );
 
   const paginate = (pageNumber: number): void => {
@@ -79,21 +83,21 @@ const TableUsers = ({ users }: { users: IUser[] }): JSX.Element => {
           justifyContent="start"
           alignItems="center"
         >
-          <Title> Historial de Usuarios </Title>
+          <Title> Registro de Proveedores </Title>
           <Icon
             icon={InformationCircleIcon}
             variant="simple"
-            tooltip="Muestra los usuarios del sistema"
+            tooltip="Muestra los productos del menu"
           />
         </Flex>
       </div>
       <div className="flex space-x-2">
         <MultiSelect
           className="max-w-full sm:max-w-xs"
-          onValueChange={setSelecteEmail}
+          onValueChange={setSelectedNames}
           placeholder="Selecciona un elemento"
         >
-          {users.map((item) => (
+          {providers.map((item) => (
             <MultiSelectItem key={item._id} value={item.name}>
               {item.name}
             </MultiSelectItem>
@@ -102,11 +106,11 @@ const TableUsers = ({ users }: { users: IUser[] }): JSX.Element => {
         <Select
           className="max-w-full sm:max-w-xs"
           defaultValue="all"
-          onValueChange={setSelectedRole}
+          onValueChange={setSelectedStatus}
         >
           <SelectItem value="all">Todas</SelectItem>
-          <SelectItem value="Admin">Admin</SelectItem>
-          <SelectItem value="User">User</SelectItem>
+          <SelectItem value="Activo">Activo</SelectItem>
+          <SelectItem value="Inactivo">Inactivo</SelectItem>
         </Select>
       </div>
       <Card className="mt-6">
@@ -114,20 +118,23 @@ const TableUsers = ({ users }: { users: IUser[] }): JSX.Element => {
           <TableHead>
             <TableRow>
               <TableHeaderCell>Nombre</TableHeaderCell>
-              <TableHeaderCell>Apellidos</TableHeaderCell>
-              <TableHeaderCell>Email</TableHeaderCell>
-              <TableHeaderCell>Role</TableHeaderCell>
+              <TableHeaderCell>Apellido</TableHeaderCell>
+              <TableHeaderCell>Contacto</TableHeaderCell>
+              <TableHeaderCell>Estatus</TableHeaderCell>
               <TableHeaderCell>Acciones</TableHeaderCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
-            {currentUsers.map((item) => (
+            {currentProviders.map((item) => (
               <TableRow key={item._id}>
                 <TableCell>{item.name}</TableCell>
                 <TableCell>{item.lastname}</TableCell>
-                <TableCell>{item.email}</TableCell>
-                <TableCell>{item.role}</TableCell>
+                <TableCell>
+                  <TableRow>{item.contact.email}</TableRow>
+                  <TableRow>{item.contact.phone}</TableRow>
+                </TableCell>
+                <TableCell>{item.status}</TableCell>
                 <TableCell>
                   <div className="flex gap-4">
                     <button
@@ -188,4 +195,4 @@ const TableUsers = ({ users }: { users: IUser[] }): JSX.Element => {
   );
 };
 
-export default TableUsers;
+export default TableProviders;

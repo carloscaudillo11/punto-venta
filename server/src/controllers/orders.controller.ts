@@ -76,7 +76,7 @@ const createOrder = async (req: Request, res: Response) => {
         user: req.user.id,
       });
       await newTransaction.save();
-      printerTicket();
+      //printerTicket();
     }
 
     return res.json(orderSaved);

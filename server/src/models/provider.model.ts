@@ -13,21 +13,7 @@ const providerSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    nif_rif: {
-      type: Number,
-      required: true,
-      unique: true,
-    },
-    address: {
-      street: String,
-      city: String,
-      state: String,
-      postal_code: String,
-      country: String,
-    },
     contact: {
-      contact_name: String,
-      contact_position: String,
       email: String,
       phone: Number,
     },

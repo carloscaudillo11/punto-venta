@@ -4,9 +4,9 @@ import { Button } from '@tremor/react';
 import Link from 'next/link';
 import { PlusCircleIcon } from '@heroicons/react/24/solid';
 
-const AddButton = (): JSX.Element => {
+const AddButton = ({ url }: { url: string }): JSX.Element => {
   return (
-    <Link href="/dashboard/products/menu/new">
+    <Link href={url}>
       <Button icon={PlusCircleIcon}>Agregar</Button>
     </Link>
   );

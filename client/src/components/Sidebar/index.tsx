@@ -11,7 +11,7 @@ import {
   ChevronDownIcon,
   BuildingStorefrontIcon,
   BanknotesIcon,
-  ShoppingCartIcon,
+  // ShoppingCartIcon,
   TagIcon,
   TruckIcon,
   UsersIcon,
@@ -131,11 +131,11 @@ const Sidebar = (): JSX.Element => {
       ]
     },
     { name: 'Proveedores', href: '/dashboard/providers', icon: TruckIcon },
-    {
+    /* {
       name: 'Compras',
       href: '/dashboard/purchases',
       icon: ShoppingCartIcon
-    },
+    }, */
     { name: 'Usuarios', href: '/dashboard/users', icon: UsersIcon },
     {
       name: 'Transacciones',

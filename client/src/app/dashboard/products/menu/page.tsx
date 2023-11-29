@@ -26,7 +26,7 @@ const MenuPage = async (): Promise<JSX.Element> => {
         <h1 className="text-xl font-bold tracking-tight text-gray-700">
           Registrar Menu
         </h1>
-        <AddButton />
+        <AddButton url="/dashboard/products/menu/new" />
       </div>
       <div>
         {menu.length === 0 ? (

@@ -31,7 +31,7 @@ const TableOrders = ({ orders }: { orders: Order[] }): JSX.Element => {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentBoxes = orders
+  const currentOrders = orders
     .filter((item) => isOrderSelected(item))
     .slice(indexOfFirstItem, indexOfLastItem);
 
@@ -125,7 +125,7 @@ const TableOrders = ({ orders }: { orders: Order[] }): JSX.Element => {
           </TableHead>
 
           <TableBody>
-            {currentBoxes.map((item) => (
+            {currentOrders.map((item) => (
               <TableRow key={item._id}>
                 <TableCell>{item.table}</TableCell>
                 <TableCell>{date(item.date)}</TableCell>
