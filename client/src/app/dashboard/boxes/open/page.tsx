@@ -35,6 +35,7 @@ const OpenBoxPage = async (): Promise<JSX.Element> => {
   } else {
     ventas = null;
   }
+
   return <OpenBox boxes={boxes} ventas={ventas} />;
 };
 

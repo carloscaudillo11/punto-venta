@@ -2,6 +2,8 @@ import { getServerSession } from 'next-auth';
 import Sidebar from '@/components/Sidebar';
 import Header from '@/components/Header';
 import { Toaster } from 'sonner';
+import { Suspense } from 'react';
+import Loading from '@/app/dashboard/loading';
 
 const DashboardLayout = async ({
   children
@@ -12,17 +14,13 @@ const DashboardLayout = async ({
   return (
     <>
       <Toaster position="top-center" richColors closeButton />
-      <div className=" z-0 relative flex h-screen overflow-hidden bg-gray-100">
-        <aside>
-          <Sidebar />
-        </aside>
+      <div className="z-0 relative flex h-screen overflow-hidden bg-gray-100">
+        <Sidebar />
         <div className="z-0 relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
-          <header>
-            <Header user={session?.user} />
-          </header>
+          <Header user={session?.user} />
           <main className="custom-scrollbar overflow-y-auto">
             <div className="mx-auto max-w-screen-3xl p-6 md:p-10">
-              {children}
+              <Suspense fallback={<Loading />}>{children}</Suspense>
             </div>
           </main>
         </div>

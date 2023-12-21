@@ -55,7 +55,7 @@ const NewSalePage = async (): Promise<JSX.Element> => {
               <div className="flex justify-center">
                 <Link
                   href="/dashboard/boxes/open"
-                  className="flex items-center gap-2 justify-center px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                  className="flex items-center gap-2 justify-center px-3 py-2 text-sm bg-blue-500 hover:bg-blue-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                 >
                   <InboxIcon className="w-5 h-5" />
                   Abrir Caja

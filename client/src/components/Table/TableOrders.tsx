@@ -1,5 +1,9 @@
 'use client';
-import { InformationCircleIcon } from '@heroicons/react/24/solid';
+import {
+  InformationCircleIcon,
+  BanknotesIcon,
+  CreditCardIcon
+} from '@heroicons/react/24/solid';
 import {
   Flex,
   Icon,
@@ -77,12 +81,38 @@ const TableOrders = ({ orders }: { orders: Order[] }): JSX.Element => {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-5 md:flex-row md:justify-between">
         <Card className="max-w-2xl" decoration="top">
-          <Text>Ventas en Efectivo</Text>
-          <Metric>$ {salesCash.toFixed(2)}</Metric>
+          <div className="flex gap-8">
+            <div className="flex items-center justify-center">
+              <Icon
+                icon={BanknotesIcon}
+                color="blue"
+                variant="solid"
+                tooltip="Ventas en Efectivo"
+                size="sm"
+              />
+            </div>
+            <div>
+              <Text>Ventas en Efectivo</Text>
+              <Metric>$ {salesCash.toFixed(2)}</Metric>
+            </div>
+          </div>
         </Card>
         <Card className="max-w-2xl" decoration="top">
-          <Text>Ventas con Tarjeta</Text>
-          <Metric>$ {salesCard.toFixed(2)}</Metric>
+          <div className="flex gap-8">
+            <div className="flex items-center justify-center">
+              <Icon
+                icon={CreditCardIcon}
+                color="blue"
+                variant="solid"
+                tooltip="Ventas con Tarjeta"
+                size="sm"
+              />
+            </div>
+            <div className="flex items-center justify-center">
+              <Text>Ventas con Tarjeta</Text>
+              <Metric>$ {salesCard.toFixed(2)}</Metric>
+            </div>
+          </div>
         </Card>
       </div>
 

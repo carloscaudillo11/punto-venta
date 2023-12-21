@@ -21,7 +21,7 @@ import {
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { type Menu } from '@/types';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from '@/app/api/axios';
 import { toast } from 'sonner';
 
@@ -42,6 +42,7 @@ const NewSale = ({
   const [total, setTotal] = useState<number>(0);
   const [subTotal, setSubTotal] = useState<number>(0);
   const [iva, setIva] = useState<number>(0);
+  const filtroInputRef = useRef<any>(null);
 
   const handleInputChange = (e: any): void => {
     setInputValue(e.target.value);
@@ -120,6 +121,28 @@ const NewSale = ({
     );
   }, [cantidades, productos]);
 
+  // close on click outside
+  useEffect(() => {
+    const clickHandler = (e: MouseEvent): void => {
+      if (!filtroInputRef.current) return;
+
+      const target = e.target as Node;
+      if (
+        filtro !== '' &&
+        !filtroInputRef.current.contains(target) &&
+        !document.getElementById('productosFiltrados')?.contains(target)
+      ) {
+        setFiltro('');
+      }
+    };
+
+    document.addEventListener('click', clickHandler);
+
+    return () => {
+      document.removeEventListener('click', clickHandler);
+    };
+  }, [filtro]);
+
   const onSubmit = (e: any): void => {
     e.preventDefault();
     if (total !== 0) {
@@ -169,13 +192,13 @@ const NewSale = ({
         Registrar Venta
       </h1>
       <div className="flex flex-col gap-3 sm:flex-row">
-        <div className="w-full sm:w-8/12">
+        <div className="w-full sm:w-8/12 relative">
           <Card className="flex flex-col gap-5 sm:p-8">
             <div className="flex flex-col sm:flex-row justify-between items-center">
               <Title className="w-full sm:w-3/5">
                 <Bold>Productos</Bold>
               </Title>
-              <div className="w-full sm:w-2/5 flex flex-col mt-2">
+              <div className="relative w-full sm:w-2/5 flex flex-col mt-2">
                 <TextInput
                   icon={MagnifyingGlassIcon}
                   placeholder="Buscar..."
@@ -183,8 +206,11 @@ const NewSale = ({
                   value={inputValue}
                 />
                 <div
-                  className={`flex flex-col ${
-                    filtro !== '' ? 'border rounded-md border-gray-300 p-2' : ''
+                  ref={filtroInputRef}
+                  className={`flex flex-col bg-white ${
+                    filtro !== ''
+                      ? 'border rounded-md border-gray-300 p-2 absolute mt-9 z-10 w-full'
+                      : 'hidden'
                   }`}
                 >
                   {filtro &&
@@ -214,7 +240,6 @@ const NewSale = ({
                     <TableHeaderCell>Quitar</TableHeaderCell>
                   </TableRow>
                 </TableHead>
-
                 <TableBody>
                   {productos.map((item: Menu) => (
                     <TableRow key={item._id}>

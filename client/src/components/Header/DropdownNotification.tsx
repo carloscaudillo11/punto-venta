@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 const DropdownNotification = (): JSX.Element => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [notifying, setNotifying] = useState(true);
+  const [notifying, setNotifying] = useState(false);
 
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
@@ -19,11 +19,13 @@ const DropdownNotification = (): JSX.Element => {
         return;
       setDropdownOpen(false);
     };
+
     document.addEventListener('click', clickHandler);
+
     return () => {
       document.removeEventListener('click', clickHandler);
     };
-  });
+  }, [dropdownOpen]);
 
   return (
     <li className="relative">

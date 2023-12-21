@@ -10,7 +10,6 @@ const DropdownUser = ({ user }: { user: any }): JSX.Element => {
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
 
-  // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent): void => {
       if (!dropdown.current) return;
@@ -26,7 +25,7 @@ const DropdownUser = ({ user }: { user: any }): JSX.Element => {
     return () => {
       document.removeEventListener('click', clickHandler);
     };
-  });
+  }, [dropdownOpen]);
 
   const img =
     user?.image && Object.keys(user.image).length !== 0

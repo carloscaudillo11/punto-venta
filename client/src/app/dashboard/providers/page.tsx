@@ -25,7 +25,7 @@ const ProvidersPage = async (): Promise<JSX.Element> => {
         <h1 className="text-xl font-bold tracking-tight text-gray-700">
           Registro Proveedores
         </h1>
-        <AddButton url='"/dashboard/providers/new"' />
+        <AddButton url="/dashboard/providers/new" />
       </div>
       <div>
         {providers.length === 0 ? (

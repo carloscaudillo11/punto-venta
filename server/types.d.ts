@@ -120,7 +120,7 @@ export interface ITransactions extends Document {
 declare global {
   namespace Express {
     interface Request {
-      user: JwtPayload
+      user: JwtPayload | any;
     }
   }
 }

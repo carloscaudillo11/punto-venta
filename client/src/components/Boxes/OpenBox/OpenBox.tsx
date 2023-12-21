@@ -3,11 +3,14 @@ import {
   InboxIcon,
   InformationCircleIcon,
   TvIcon,
-  SignalIcon
+  SignalIcon,
+  CalculatorIcon,
+  CurrencyDollarIcon,
+  ArrowTrendingUpIcon
 } from '@heroicons/react/24/solid';
 import ModalOpenBox from '@/components/Modal/ModalOpenBox';
 import { useEffect, useState } from 'react';
-import { Card, Metric, Text, Button, Badge } from '@tremor/react';
+import { Card, Metric, Text, Button, Badge, Icon } from '@tremor/react';
 import { toast } from 'sonner';
 import axios from '@/app/api/axios';
 import { useRouter } from 'next/navigation';
@@ -52,31 +55,23 @@ const OpenBox = ({
   }
 
   const corteCaja = async (): Promise<void> => {
-    const fetch = async (): Promise<any> => {
-      const box = boxes.box._id;
-      const id = boxes._id;
+    try {
+      const { box, _id: id } = boxes;
       const finalAmount = total;
-      const res = await axios.put(
+
+      const response = await axios.put(
         `/boxCon/closeBox/${id}`,
         { box, finalAmount },
-        {
-          withCredentials: true
-        }
+        { withCredentials: true }
       );
-      return res.data;
-    };
 
-    const promise = fetch();
-    toast.promise(promise, {
-      loading: 'Loading...',
-      success: () => {
-        router.refresh();
-        return 'Corte de caja exitoso!';
-      },
-      error: (err) => {
-        return err.response.data.message;
-      }
-    });
+      toast.success('Corte de caja exitoso!');
+      router.refresh();
+      console.log(response.data); // Puedes manejar o loggear la respuesta si es necesario
+    } catch (error) {
+      if (error instanceof Error)
+        toast.error(error.message || 'Error en el corte de caja');
+    }
   };
 
   return (
@@ -126,16 +121,55 @@ const OpenBox = ({
           </div>
           <div className="flex flex-col gap-5 md:flex-row md:justify-between">
             <Card className="max-w-md" decoration="top">
-              <Text>Saldo Inicial</Text>
-              <Metric>$ {boxes.startingAmount}</Metric>
+              <div className="flex gap-8">
+                <div className="flex items-center justify-center">
+                  <Icon
+                    icon={CurrencyDollarIcon}
+                    color="blue"
+                    variant="solid"
+                    tooltip="Saldo Inicial"
+                    size="sm"
+                  />
+                </div>
+                <div>
+                  <Text>Saldo Inicial</Text>
+                  <Metric>$ {boxes.startingAmount}</Metric>
+                </div>
+              </div>
             </Card>
             <Card className="max-w-md" decoration="top">
-              <Text>Ventas</Text>
-              <Metric>$ {sales.toFixed(2)}</Metric>
+              <div className="flex gap-8">
+                <div className="flex items-center justify-center">
+                  <Icon
+                    icon={ArrowTrendingUpIcon}
+                    color="blue"
+                    variant="solid"
+                    tooltip="Ventas"
+                    size="sm"
+                  />
+                </div>
+                <div>
+                  <Text>Ventas</Text>
+                  <Metric>$ {sales.toFixed(2)}</Metric>
+                </div>
+              </div>
             </Card>
             <Card className="max-w-md" decoration="top">
-              <Text>Total a Rendir</Text>
-              <Metric>$ {total.toFixed(2)}</Metric>
+              <div className="flex gap-8">
+                <div className="flex items-center justify-center">
+                  <Icon
+                    icon={CalculatorIcon}
+                    color="blue"
+                    variant="solid"
+                    tooltip="Total a Rendir"
+                    size="sm"
+                  />
+                </div>
+                <div>
+                  <Text>Total a Rendir</Text>
+                  <Metric>$ {total.toFixed(2)}</Metric>
+                </div>
+              </div>
             </Card>
           </div>
         </div>
