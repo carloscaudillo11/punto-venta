@@ -24,6 +24,7 @@ import {
 } from '@heroicons/react/24/outline';
 import axios from '@/app/api/axios';
 import { useProjectContext } from '@/context/ProjectProvider';
+import { motion } from 'framer-motion';
 
 const Sidebar = (): JSX.Element => {
   const pathname = usePathname();
@@ -182,7 +183,7 @@ const Sidebar = (): JSX.Element => {
                   >
                     {(handleClick, open) => {
                       return (
-                        <React.Fragment>
+                        <>
                           <div
                             className={`relative flex items-center gap-2.5 rounded-md py-2 px-3 duration-300 ease-in-out hover:bg-gray-100 text-gray-600 font-normal`}
                             onClick={() => {
@@ -200,11 +201,16 @@ const Sidebar = (): JSX.Element => {
                             )}
                           </div>
                           {item.submenu.map((subitem, index) => (
-                            <div
+                            <motion.div
                               key={index}
-                              className={`translate transform overflow-hidden ${
-                                !open && 'hidden'
-                              }`}
+                              initial={{ height: 0, opacity: 0, y: -10 }} // Establece la altura inicial, opacidad y posición Y
+                              animate={{
+                                height: open ? 'auto' : 0,
+                                opacity: open ? 1 : 0,
+                                y: open ? 0 : -10
+                              }} // Anima la altura, opacidad y posición Y
+                              transition={{ duration: 0.3 }} // Duración de la transición
+                              className={`overflow-hidden`}
                             >
                               <ul className="mt-3 flex flex-col pl-6">
                                 <li>
@@ -227,9 +233,9 @@ const Sidebar = (): JSX.Element => {
                                   </Link>
                                 </li>
                               </ul>
-                            </div>
+                            </motion.div>
                           ))}
-                        </React.Fragment>
+                        </>
                       );
                     }}
                   </SidebarLinkGroup>

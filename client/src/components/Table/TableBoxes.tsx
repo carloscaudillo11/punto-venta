@@ -8,18 +8,11 @@ import {
 } from '@heroicons/react/24/outline';
 import {
   Badge,
-  Flex,
   Icon,
   MultiSelect,
   MultiSelectItem,
   Select,
   SelectItem,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeaderCell,
-  TableRow,
   Title,
   Card
 } from '@tremor/react';
@@ -28,6 +21,8 @@ import { useRouter } from 'next/navigation';
 import axios from '@/app/api/axios';
 import { useState } from 'react';
 import ModalBoxUpdate from '../Modal/ModalBox';
+import Paginate from '../ui/Paginate';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface Boxes {
   _id: number;
@@ -89,128 +84,166 @@ const TableBoxes = ({ boxes }: { boxes: Boxes[] }): JSX.Element => {
     setCurrentPage(pageNumber);
   };
 
+  const childVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: 'easeOut' }
+    }
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { duration: 0.5, ease: 'easeOut' }
+    }
+  };
+
+  const productVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.4, ease: 'easeOut' }
+    },
+    exit: { opacity: 0, y: -20 }
+  };
+
   return (
-    <>
-      <div>
-        <Flex
-          className="space-x-0.5"
-          justifyContent="start"
-          alignItems="center"
-        >
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      transition={{ duration: 0.5, delay: 0.2 }}
+      className="flex flex-col gap-6"
+    >
+      <motion.div
+        variants={childVariants}
+        initial="hidden"
+        animate="visible"
+        transition={{ duration: 0.5, delay: 0.6 }}
+        className="flex flex-col gap-2"
+      >
+        <div className="space-x-0.5 flex justify-start items-center">
           <Title> Historial de Cajas </Title>
           <Icon
             icon={InformationCircleIcon}
             variant="simple"
             tooltip="Muestra las cajas registradas"
           />
-        </Flex>
-      </div>
-      <div className="flex space-x-2">
-        <MultiSelect
-          className="max-w-full sm:max-w-xs"
-          onValueChange={setSelectedNames}
-          placeholder="Selecciona una caja"
-        >
-          {boxes.map((item) => (
-            <MultiSelectItem key={item._id} value={item.name}>
-              {item.name}
-            </MultiSelectItem>
-          ))}
-        </MultiSelect>
-        <Select
-          className="max-w-full sm:max-w-xs"
-          defaultValue="all"
-          onValueChange={setSelectedStatus}
-        >
-          <SelectItem value="all">Todas</SelectItem>
-          <SelectItem value="Abierta">Abierta</SelectItem>
-          <SelectItem value="Cerrada">Cerrada</SelectItem>
-        </Select>
-      </div>
-      <Card className="mt-6">
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableHeaderCell>Nombre</TableHeaderCell>
-              <TableHeaderCell>Estatus</TableHeaderCell>
-              <TableHeaderCell>Acciones</TableHeaderCell>
-            </TableRow>
-          </TableHead>
+        </div>
+        <div className="flex space-x-2">
+          <MultiSelect
+            className="max-w-full sm:max-w-xs"
+            onValueChange={setSelectedNames}
+            placeholder="Selecciona una caja"
+          >
+            {boxes.map((item) => (
+              <MultiSelectItem key={item._id} value={item.name}>
+                {item.name}
+              </MultiSelectItem>
+            ))}
+          </MultiSelect>
+          <Select
+            className="max-w-full sm:max-w-xs"
+            defaultValue="all"
+            onValueChange={setSelectedStatus}
+          >
+            <SelectItem value="all">Todas</SelectItem>
+            <SelectItem value="Abierta">Abierta</SelectItem>
+            <SelectItem value="Cerrada">Cerrada</SelectItem>
+          </Select>
+        </div>
+      </motion.div>
 
-          <TableBody>
-            {currentBoxes.map((item) => (
-              <TableRow key={item._id}>
-                <TableCell>{item.name}</TableCell>
-                <TableCell>
-                  {item.status === 'Abierta' ? (
-                    <Badge icon={SignalIcon}>{item.status}</Badge>
-                  ) : (
-                    <Badge color="red" icon={SignalSlashIcon}>
-                      {item.status}
-                    </Badge>
-                  )}
-                </TableCell>
-                <TableCell>
-                  <div className="flex gap-4">
-                    <button
-                      className="flex items-center justify-center focus:outline-none"
-                      onClick={() => {
-                        setBox(item);
-                        setOpenModalBoxUpdate(true);
-                      }}
-                    >
-                      <PencilIcon className="w-5 text-gray-600 hover:text-blue-600" />
-                    </button>
-                    <button
-                      className="flex items-center justify-center focus:outline-none"
-                      onClick={() => {
-                        toast(`Deseas eliminar la caja ${item.name} `, {
-                          action: {
-                            label: 'Eliminar',
-                            onClick: async () => {
-                              await Delete(item._id);
-                            }
-                          }
-                        });
-                      }}
-                    >
-                      <TrashIcon className="w-5 text-gray-600 hover:text-red-600" />
-                    </button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+      <Card>
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead>
+              <tr>
+                <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                  Nombre
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                  Estatus
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                  Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <AnimatePresence mode="wait">
+                {currentBoxes.map((item, index) => (
+                  <motion.tr
+                    key={item._id}
+                    className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}
+                    variants={productVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                  >
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                      {item.name}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                      {item.status === 'Abierta' ? (
+                        <Badge icon={SignalIcon}>{item.status}</Badge>
+                      ) : (
+                        <Badge color="red" icon={SignalSlashIcon}>
+                          {item.status}
+                        </Badge>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex gap-4">
+                        <button
+                          className="flex items-center justify-center focus:outline-none"
+                          onClick={() => {
+                            setBox(item);
+                            setOpenModalBoxUpdate(true);
+                          }}
+                        >
+                          <PencilIcon className="w-5 text-gray-600 hover:text-blue-600" />
+                        </button>
+                        <button
+                          className="flex items-center justify-center focus:outline-none"
+                          onClick={() => {
+                            toast(`Deseas eliminar la caja ${item.name} `, {
+                              action: {
+                                label: 'Eliminar',
+                                onClick: async () => {
+                                  await Delete(item._id);
+                                }
+                              }
+                            });
+                          }}
+                        >
+                          <TrashIcon className="w-5 text-gray-600 hover:text-red-600" />
+                        </button>
+                      </div>
+                    </td>
+                  </motion.tr>
+                ))}
+              </AnimatePresence>
+            </tbody>
+          </table>
+        </div>
       </Card>
-      <div className="mt-6">
-        <nav className="flex justify-center">
-          <ul className="flex items-center">
-            {Array.from({ length: totalPages }, (_, index) => (
-              <li key={index} className="mx-1">
-                <button
-                  onClick={() => {
-                    paginate(index + 1);
-                  }}
-                  className={`px-3 py-1 rounded-md ${
-                    currentPage === index + 1
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-200'
-                  }`}
-                >
-                  {index + 1}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </div>
+
+      <Paginate
+        totalPages={totalPages}
+        currentPage={currentPage}
+        paginate={paginate}
+      />
       <ModalBoxUpdate
         open={openModalBoxUpdate}
         setOpen={setOpenModalBoxUpdate}
         box={box}
       />
-    </>
+    </motion.div>
   );
 };
 

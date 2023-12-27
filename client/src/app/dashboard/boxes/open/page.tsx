@@ -36,7 +36,7 @@ const OpenBoxPage = async (): Promise<JSX.Element> => {
     ventas = null;
   }
 
-  return <OpenBox boxes={boxes} ventas={ventas} />;
+  return <OpenBox dataBoxes={boxes} ventas={ventas} />;
 };
 
 export default OpenBoxPage;

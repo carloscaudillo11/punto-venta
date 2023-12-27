@@ -9,12 +9,6 @@ import {
   Icon,
   Select,
   SelectItem,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeaderCell,
-  TableRow,
   Title,
   Card,
   Text,
@@ -22,13 +16,15 @@ import {
 } from '@tremor/react';
 import { useEffect, useState } from 'react';
 import { type Order } from '@/types';
+import { motion } from 'framer-motion';
+import Paginate from '../ui/Paginate';
 
 const TableOrders = ({ orders }: { orders: Order[] }): JSX.Element => {
   const [selectedPaymethod, setSelectedPaymethod] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [salesCard, setSalesCard] = useState<number>(0);
   const [salesCash, setSalesCash] = useState<number>(0);
-  const itemsPerPage = 4;
+  const itemsPerPage = 5;
 
   const isOrderSelected = (order: Order): boolean =>
     order.paymethod === selectedPaymethod || selectedPaymethod === 'all';
@@ -77,9 +73,38 @@ const TableOrders = ({ orders }: { orders: Order[] }): JSX.Element => {
     return newdate;
   };
 
+  const childVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: 'easeOut' }
+    }
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { duration: 0.5, ease: 'easeOut' }
+    }
+  };
+
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-5 md:flex-row md:justify-between">
+    <motion.div
+      className="flex flex-col gap-6"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      transition={{ duration: 0.5, delay: 0.5 }}
+    >
+      <motion.div
+        className="flex flex-col gap-5 md:flex-row md:justify-between"
+        variants={childVariants}
+        initial="hidden"
+        animate="visible"
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
         <Card className="max-w-2xl" decoration="top">
           <div className="flex gap-8">
             <div className="flex items-center justify-center">
@@ -108,15 +133,20 @@ const TableOrders = ({ orders }: { orders: Order[] }): JSX.Element => {
                 size="sm"
               />
             </div>
-            <div className="flex items-center justify-center">
+            <div>
               <Text>Ventas con Tarjeta</Text>
               <Metric>$ {salesCard.toFixed(2)}</Metric>
             </div>
           </div>
         </Card>
-      </div>
+      </motion.div>
 
-      <div>
+      <motion.div
+        variants={childVariants}
+        initial="hidden"
+        animate="visible"
+        transition={{ duration: 0.5, delay: 0.4 }}
+      >
         <Flex
           className="space-x-0.5"
           justifyContent="start"
@@ -141,53 +171,54 @@ const TableOrders = ({ orders }: { orders: Order[] }): JSX.Element => {
             <SelectItem value="Tarjeta">Tarjeta</SelectItem>
           </Select>
         </div>
+      </motion.div>
+
+      <div className="overflow-x-auto">
+        <Card>
+          <table className="w-full divide-y divide-gray-200">
+            <thead>
+              <tr>
+                <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                  N° Mesa
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                  Fecha
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                  Metodo de pago
+                </th>
+                <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                  Total
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentOrders.map((item) => (
+                <tr key={item._id}>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                    Mesa {item.table}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                    {date(item.date)}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                    {item.paymethod}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                    ${item.total}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </Card>
       </div>
-
-      <Card>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableHeaderCell>Mesa</TableHeaderCell>
-              <TableHeaderCell>Fecha</TableHeaderCell>
-              <TableHeaderCell>Metodo de pago</TableHeaderCell>
-              <TableHeaderCell>Total</TableHeaderCell>
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {currentOrders.map((item) => (
-              <TableRow key={item._id}>
-                <TableCell>{item.table}</TableCell>
-                <TableCell>{date(item.date)}</TableCell>
-                <TableCell>{item.paymethod}</TableCell>
-                <TableCell>${item.total}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </Card>
-
-      <nav className="flex justify-center">
-        <ul className="flex items-center">
-          {Array.from({ length: totalPages }, (_, index) => (
-            <li key={index} className="mx-1">
-              <button
-                onClick={() => {
-                  paginate(index + 1);
-                }}
-                className={`px-3 py-1 rounded-md ${
-                  currentPage === index + 1
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-gray-200'
-                }`}
-              >
-                {index + 1}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </div>
+      <Paginate
+        totalPages={totalPages}
+        currentPage={currentPage}
+        paginate={paginate}
+      />
+    </motion.div>
   );
 };
 

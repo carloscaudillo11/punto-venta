@@ -7,8 +7,6 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableHead,
-  TableHeaderCell,
   TableRow,
   Button,
   Bold,
@@ -24,6 +22,7 @@ import { type Menu } from '@/types';
 import React, { useState, useEffect, useRef } from 'react';
 import axios from '@/app/api/axios';
 import { toast } from 'sonner';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const NewSale = ({
   menu,
@@ -179,20 +178,63 @@ const NewSale = ({
     setProductos([]);
     setInputValue('');
     setCantidades({});
-    setPayMethod('');
+    setPayMethod('Efectivo');
     setMesa(0);
     setTotal(0);
     setSubTotal(0);
     setIva(0);
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: { opacity: 1, y: 0 }
+  };
+
+  const childVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: 'easeOut' }
+    }
+  };
+
+  const productVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.4, ease: 'easeOut' }
+    },
+    exit: { opacity: 0, y: -20 }
+  };
+
   return (
-    <div className="flex flex-col gap-6 py-2">
-      <h1 className="text-xl font-semibold tracking-tight text-gray-700">
+    <motion.div
+      className="flex flex-col gap-3"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      transition={{ type: 'tween', duration: 0.6 }}
+    >
+      <motion.h1
+        className="text-xl font-semibold tracking-tight text-gray-700"
+        variants={childVariants}
+        initial="hidden"
+        animate="visible"
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
         Registrar Venta
-      </h1>
+      </motion.h1>
+
       <div className="flex flex-col gap-3 sm:flex-row">
-        <div className="w-full sm:w-8/12 relative">
+        <motion.div
+          className="w-full sm:w-8/12 relative"
+          variants={childVariants}
+          initial="hidden"
+          animate="visible"
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
           <Card className="flex flex-col gap-5 sm:p-8">
             <div className="flex flex-col sm:flex-row justify-between items-center">
               <Title className="w-full sm:w-3/5">
@@ -228,77 +270,103 @@ const NewSale = ({
                 </div>
               </div>
             </div>
-            <div>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableHeaderCell>Imagen</TableHeaderCell>
-                    <TableHeaderCell>Nombre</TableHeaderCell>
-                    <TableHeaderCell>Categoria</TableHeaderCell>
-                    <TableHeaderCell>Precio</TableHeaderCell>
-                    <TableHeaderCell>Cantidad</TableHeaderCell>
-                    <TableHeaderCell>Quitar</TableHeaderCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {productos.map((item: Menu) => (
-                    <TableRow key={item._id}>
-                      {item.image && (
-                        <TableCell>
-                          <img
-                            src={item.image.url}
-                            alt={item.name}
-                            className="w-full sm:w-25 h-15 rounded-sm"
-                          />
-                        </TableCell>
-                      )}
-                      <TableCell>{item.name}</TableCell>
-                      <TableCell className="break-words">
-                        {item.category_Menu}
-                      </TableCell>
-                      <TableCell>${item.price}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center">
-                          <Button
-                            className="w-8 h-8"
-                            variant="secondary"
-                            onClick={() => {
-                              handleDecreaseQuantity(item._id);
-                            }}
-                          >
-                            -
-                          </Button>
-                          <div className="w-8 h-8 border rounded-md border-gray-300 flex items-center justify-center">
-                            <Text>{cantidades[item._id]}</Text>
+            <div className="mt-4 overflow-y-hidden">
+              <table className="w-full divide-y divide-gray-200">
+                <thead>
+                  <tr>
+                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                      Imagen
+                    </th>
+                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                      Nombre
+                    </th>
+                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                      Categoria
+                    </th>
+                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                      Precio
+                    </th>
+                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                      Cantidad
+                    </th>
+                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                      Quitar
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <AnimatePresence mode="wait">
+                    {productos.map((item: Menu, index: number) => (
+                      <motion.tr
+                        key={item._id}
+                        className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}
+                        variants={productVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                      >
+                        {item.image && (
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <img
+                              src={item.image.url}
+                              alt={item.name}
+                              className="w-full sm:w-25 h-15 rounded-sm"
+                            />
+                          </td>
+                        )}
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                          {item.name}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                          {item.category_Menu}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                          ${item.price}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                          <div className="flex items-center">
+                            <Button
+                              className="w-8 h-8"
+                              variant="secondary"
+                              onClick={() => {
+                                handleDecreaseQuantity(item._id);
+                              }}
+                            >
+                              -
+                            </Button>
+                            <div className="w-8 h-8 border rounded-md border-gray-300 flex items-center justify-center">
+                              <Text>{cantidades[item._id]}</Text>
+                            </div>
+                            <Button
+                              className="w-8 h-8"
+                              variant="secondary"
+                              onClick={() => {
+                                handleIncreaseQuantity(item._id);
+                              }}
+                            >
+                              +
+                            </Button>
                           </div>
-                          <Button
-                            className="w-8 h-8"
-                            variant="secondary"
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                          <button
+                            className="flex items-center justify-center focus:outline-none"
                             onClick={() => {
-                              handleIncreaseQuantity(item._id);
+                              handleDelete(item._id);
                             }}
                           >
-                            +
-                          </Button>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <button
-                          className="flex items-center justify-center focus:outline-none"
-                          onClick={() => {
-                            handleDelete(item._id);
-                          }}
-                        >
-                          <TrashIcon className="w-5 text-gray-600 hover:text-red-600" />
-                        </button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                            <TrashIcon className="w-5 text-gray-600 hover:text-red-600" />
+                          </button>
+                        </td>
+                      </motion.tr>
+                    ))}
+                  </AnimatePresence>
+                </tbody>
+              </table>
             </div>
           </Card>
-        </div>
+        </motion.div>
+
         <div className="w-full sm:w-4/12">
           <Card className="sm:p-8">
             <div className="flex flex-col gap-4">
@@ -374,7 +442,7 @@ const NewSale = ({
           </Card>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

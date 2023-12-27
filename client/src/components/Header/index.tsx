@@ -1,54 +1,64 @@
 'use client';
+import { motion } from 'framer-motion';
+import { useState } from 'react'; // Agregamos useState
+import { useProjectContext } from '@/context/ProjectProvider';
 import DropdownNotification from './DropdownNotification';
 import DropdownUser from './DropdownUser';
-import { useProjectContext } from '@/context/ProjectProvider';
+
+const Path = (props: any): any => (
+  <motion.path
+    fill="transparent"
+    strokeWidth="3"
+    stroke="hsl(0, 0%, 18%)"
+    strokeLinecap="round"
+    {...props}
+  />
+);
 
 const Header = (props: { user: any }): JSX.Element => {
   const { setSidebarOpen, sidebarOpen } = useProjectContext();
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // Estado para controlar la apertura y cierre del menú
+
+  const toggleMenu = (): void => {
+    setSidebarOpen(!sidebarOpen);
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
-    <header className="sticky top-0 z-999 flex w-full bg-white drop-shadow-1">
+    <motion.header
+      className="sticky top-0 z-999 flex w-full bg-white drop-shadow-1"
+      initial={false}
+      animate={sidebarOpen ? 'open' : 'closed'}
+    >
       <div className="flex flex-grow items-center sm:justify-end justify-between px-4 py-4 shadow-2 md:px-6 2xl:px-11">
         <div className="flex items-center gap-2 sm:gap-4 lg:hidden">
-          <button
-            aria-controls="sidebar"
-            onClick={(e) => {
-              e.stopPropagation();
-              setSidebarOpen(!sidebarOpen);
-            }}
+          <motion.button
+            onClick={toggleMenu}
             className="z-99999 block rounded-sm border border-gray-200 bg-white p-1.5 shadow-sm lg:hidden"
           >
-            <span className="relative block h-5.5 w-5.5 cursor-pointer">
-              <span className="block absolute right-0 h-full w-full">
-                <span
-                  className={`relative left-0 top-0 my-1 block h-0.5 w-0 rounded-sm bg-black delay-[0] duration-200 ease-in-out ${
-                    !sidebarOpen && '!w-full delay-300'
-                  }`}
-                ></span>
-                <span
-                  className={`relative left-0 top-0 my-1 block h-0.5 w-0 rounded-sm bg-black delay-150 duration-200 ease-in-out ${
-                    !sidebarOpen && 'delay-400 !w-full'
-                  }`}
-                ></span>
-                <span
-                  className={`relative left-0 top-0 my-1 block h-0.5 w-0 rounded-sm bg-black delay-200 duration-200 ease-in-out ${
-                    !sidebarOpen && '!w-full delay-500'
-                  }`}
-                ></span>
-              </span>
-              <span className="absolute right-0 h-full w-full rotate-45">
-                <span
-                  className={`absolute left-2.5 top-0 block h-full w-0.5 rounded-sm bg-black delay-300 duration-200 ease-in-out${
-                    !sidebarOpen && '!h-0 !delay-[0]'
-                  }`}
-                ></span>
-                <span
-                  className={`delay-400 absolute left-0 top-2.5 block h-0.5 w-full rounded-sm bg-black duration-200 ease-in-out ${
-                    !sidebarOpen && '!h-0 !delay-200'
-                  }`}
-                ></span>
-              </span>
-            </span>
-          </button>
+            <svg width="23" height="23" viewBox="0 0 23 23">
+              <Path
+                variants={{
+                  closed: { d: 'M 2 2.5 L 20 2.5' },
+                  open: { d: 'M 3 16.5 L 17 2.5' }
+                }}
+              />
+              <Path
+                d="M 2 9.423 L 20 9.423"
+                variants={{
+                  closed: { opacity: 1 },
+                  open: { opacity: 0 }
+                }}
+                transition={{ duration: 0.1 }}
+              />
+              <Path
+                variants={{
+                  closed: { d: 'M 2 16.346 L 20 16.346' },
+                  open: { d: 'M 3 2.5 L 17 16.346' }
+                }}
+              />
+            </svg>
+          </motion.button>
         </div>
 
         <div className="flex items-center gap-3 2xsm:gap-7">
@@ -58,7 +68,7 @@ const Header = (props: { user: any }): JSX.Element => {
           <DropdownUser user={props.user} />
         </div>
       </div>
-    </header>
+    </motion.header>
   );
 };
 

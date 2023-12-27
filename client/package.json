@@ -14,6 +14,7 @@
     "@heroicons/react": "^2.0.18",
     "@tremor/react": "^3.11.1",
     "axios": "^1.5.1",
+    "framer-motion": "^10.16.16",
     "next": "13.5.4",
     "next-auth": "^4.23.2",
     "react": "^18",

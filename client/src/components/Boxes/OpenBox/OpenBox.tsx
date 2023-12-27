@@ -14,37 +14,44 @@ import { Card, Metric, Text, Button, Badge, Icon } from '@tremor/react';
 import { toast } from 'sonner';
 import axios from '@/app/api/axios';
 import { useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const OpenBox = ({
-  boxes,
+  dataBoxes,
   ventas
 }: {
-  boxes: any;
+  dataBoxes: any;
   ventas: any;
 }): JSX.Element => {
   const [openModalForm, setOpenModalForm] = useState<boolean>(false);
   const [sales, setSales] = useState<number>(0);
   const [total, setTotal] = useState<number>(0);
   const router = useRouter();
+  const [boxes, setBoxes] = useState(dataBoxes);
 
   useEffect(() => {
-    if (boxes !== null) {
+    setBoxes(dataBoxes);
+  }, [dataBoxes]);
+
+  useEffect(() => {
+    if (dataBoxes !== null) {
       try {
         const totalSales = ventas.reduce(
-          (accumulator: any, sale: { total: any }) => accumulator + sale.total,
+          (acumulador: number, venta: { total: number }) =>
+            acumulador + venta.total,
           0
         );
         setSales(totalSales);
-        setTotal(boxes.startingAmount + totalSales);
+        setTotal(dataBoxes.startingAmount + totalSales);
       } catch (error) {
         console.error('Error al obtener datos:', error);
       }
     }
-  }, [boxes, ventas]);
+  }, [dataBoxes, ventas]);
 
   let formattedDate = '';
-  if (boxes !== null) {
-    const dateString = boxes.date;
+  if (dataBoxes !== null) {
+    const dateString = dataBoxes.date;
     const date = new Date(dateString);
     const day = date.getDate().toString().padStart(2, '0');
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -59,7 +66,7 @@ const OpenBox = ({
       const { box, _id: id } = boxes;
       const finalAmount = total;
 
-      const response = await axios.put(
+      await axios.put(
         `/boxCon/closeBox/${id}`,
         { box, finalAmount },
         { withCredentials: true }
@@ -67,22 +74,63 @@ const OpenBox = ({
 
       toast.success('Corte de caja exitoso!');
       router.refresh();
-      console.log(response.data); // Puedes manejar o loggear la respuesta si es necesario
+      // console.log(response.data); // Puedes manejar o loggear la respuesta si es necesario
     } catch (error) {
       if (error instanceof Error)
         toast.error(error.message || 'Error en el corte de caja');
     }
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: 20 }
+  };
+
+  const childVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: 'easeOut' }
+    }
+  };
+
   return (
-    <>
+    <AnimatePresence mode="wait">
       {boxes !== null ? (
-        <div className="flex flex-col gap-3">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-            #{boxes.box.name}
-          </h1>
-          <div className="flex justify-center items-center py-3">
-            <div className="p-6 rounded-lg border border-gray-300 w-full">
+        <motion.div
+          key="open"
+          className="flex flex-col gap-3"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          transition={{ type: 'tween', duration: 0.5 }}
+        >
+          <motion.h1
+            className="text-3xl font-bold tracking-tight text-gray-900"
+            variants={childVariants}
+            initial="hidden"
+            animate="visible"
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            # {boxes.box.name}
+          </motion.h1>
+          <motion.div
+            className="flex justify-center items-center py-3"
+            variants={childVariants}
+            initial="hidden"
+            animate="visible"
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            <motion.div
+              className="p-6 rounded-lg border border-gray-300 w-full"
+              variants={childVariants}
+              initial="hidden"
+              animate="visible"
+              transition={{ duration: 0.5, delay: 0.6 }}
+            >
               <div className="flex flex-col gap-5 md:flex-row md:justify-between md:items-center">
                 <div className="flex gap-4">
                   <TvIcon className="w-10 h-15 text-blue-700" />
@@ -117,8 +165,8 @@ const OpenBox = ({
                   </Button>
                 </div>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
           <div className="flex flex-col gap-5 md:flex-row md:justify-between">
             <Card className="max-w-md" decoration="top">
               <div className="flex gap-8">
@@ -172,14 +220,40 @@ const OpenBox = ({
               </div>
             </Card>
           </div>
-        </div>
+        </motion.div>
       ) : (
-        <div className="flex flex-col gap-4">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+        <motion.div
+          key="closed"
+          className="flex flex-col gap-4"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          transition={{ type: 'tween', duration: 0.5 }}
+        >
+          <motion.h1
+            className="text-3xl font-bold tracking-tight text-gray-900"
+            variants={childVariants}
+            initial="hidden"
+            animate="visible"
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
             Abrir una Caja
-          </h1>
-          <div className="flex justify-center items-center py-3">
-            <div className="p-6 rounded-lg border border-gray-300 w-full">
+          </motion.h1>
+          <motion.div
+            className="flex justify-center items-center py-3"
+            variants={childVariants}
+            initial="hidden"
+            animate="visible"
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            <motion.div
+              className="p-6 rounded-lg border border-gray-300 w-full"
+              variants={childVariants}
+              initial="hidden"
+              animate="visible"
+              transition={{ duration: 0.5, delay: 0.6 }}
+            >
               <div className="flex justify-center">
                 <p className="mb-4 flex gap-2 text-center text-amber-500 text-sm font-semibold">
                   <InformationCircleIcon className="w-5 h-5" />
@@ -196,12 +270,12 @@ const OpenBox = ({
                   Abrir Caja
                 </Button>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
           <ModalOpenBox open={openModalForm} setOpen={setOpenModalForm} />
-        </div>
+        </motion.div>
       )}
-    </>
+    </AnimatePresence>
   );
 };
 

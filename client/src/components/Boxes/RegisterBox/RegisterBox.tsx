@@ -4,15 +4,49 @@ import { PlusCircleIcon, PencilSquareIcon } from '@heroicons/react/24/solid';
 import { useState } from 'react';
 import ModalBox from '@/components/Modal/ModalBox';
 import { Button } from '@tremor/react';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const RegisterBox = ({ boxes }: { boxes: any }): JSX.Element => {
   const [openModalBox, setOpenModalBox] = useState<boolean>(false);
+
+  const containerVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: { opacity: 1, y: 0 }
+  };
+
+  const childVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: 'easeOut' }
+    }
+  };
+
   return (
-    <div className="flex flex-col gap-6 py-2">
-      <div className="flex justify-between">
-        <h1 className="text-xl font-semibold tracking-tight text-gray-700">
+    <motion.div
+      className="flex flex-col gap-6 py-2"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      transition={{ type: 'tween', duration: 0.5 }}
+    >
+      <motion.div
+        variants={childVariants}
+        initial="hidden"
+        animate="visible"
+        transition={{ duration: 0.5, delay: 0.4 }}
+        className="flex justify-between"
+      >
+        <motion.h1
+          variants={childVariants}
+          initial="hidden"
+          animate="visible"
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="text-xl font-semibold tracking-tight text-gray-700"
+        >
           Registrar Caja
-        </h1>
+        </motion.h1>
         <Button
           icon={PlusCircleIcon}
           onClick={() => {
@@ -22,19 +56,34 @@ const RegisterBox = ({ boxes }: { boxes: any }): JSX.Element => {
         >
           Agregar Caja
         </Button>
-      </div>
-      <div>
+      </motion.div>
+      <AnimatePresence>
         {boxes.length === 0 ? (
-          <div className="flex items-center gap-2 text-gray-500 justify-center">
+          <motion.div
+            key="open"
+            variants={childVariants}
+            initial="hidden"
+            animate="visible"
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="flex items-center gap-2 text-gray-500 justify-center"
+          >
             <PencilSquareIcon className="w-5 h-5" />
             <p>No hay datos aún</p>
-          </div>
+          </motion.div>
         ) : (
-          <TableBoxes boxes={boxes} />
+          <motion.div
+            key="close"
+            variants={childVariants}
+            initial="hidden"
+            animate="visible"
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
+            <TableBoxes boxes={boxes} />
+          </motion.div>
         )}
-      </div>
+      </AnimatePresence>
       <ModalBox open={openModalBox} setOpen={setOpenModalBox} />
-    </div>
+    </motion.div>
   );
 };
 
