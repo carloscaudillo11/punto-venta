@@ -37,7 +37,6 @@ const Sidebar = (): JSX.Element => {
   const [boxes, setBoxes] = useState<any[]>([]);
   const { setSidebarOpen, sidebarOpen } = useProjectContext();
 
-  // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent): void => {
       if (!sidebar.current || !trigger.current) return;
@@ -72,8 +71,7 @@ const Sidebar = (): JSX.Element => {
       return res.data;
     };
 
-    const promise = fetch();
-    promise
+    fetch()
       .then((data) => {
         setBoxes(data);
       })
@@ -148,11 +146,10 @@ const Sidebar = (): JSX.Element => {
   return (
     <aside
       ref={sidebar}
-      className={`absolute left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-white border duration-300 ease-linear lg:static lg:translate-x-0 ${
+      className={`absolute left-0 top-0 z-9999 flex h-screen w-70 flex-col overflow-y-hidden bg-white duration-300 ease-linear border lg:static lg:translate-x-0 ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       }`}
     >
-      {/* <!-- SIDEBAR HEADER --> */}
       <div className="flex items-center sm:justify-center justify-between gap-2 px-6 py-5.5 lg:py-6.5 border-b ">
         <Link href="/">
           <Image width={156} height={32} src={'/images/logo.png'} alt="Logo" />
@@ -171,98 +168,96 @@ const Sidebar = (): JSX.Element => {
         </button>
       </div>
 
-      <div className="custom-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
-        <nav className="mt-3 py-4 px-4 lg:mt-9 lg:px-6">
-          <div>
-            <ul className="mb-6 flex flex-col gap-4">
-              {navigation.map((item, index) =>
-                item.submenu ? (
-                  <SidebarLinkGroup
-                    activeCondition={pathname === item.href}
-                    key={index}
-                  >
-                    {(handleClick, open) => {
-                      return (
-                        <>
-                          <div
-                            className={`relative flex items-center gap-2.5 rounded-md py-2 px-3 duration-300 ease-in-out hover:bg-gray-100 text-gray-600 font-normal`}
-                            onClick={() => {
-                              sidebarExpanded
-                                ? handleClick()
-                                : setSidebarExpanded(true);
-                            }}
+      <div className="custom-scrollbar overflow-y-auto">
+        <nav className="mt-6">
+          <ul className="flex flex-col">
+            {navigation.map((item, index) =>
+              item.submenu ? (
+                <SidebarLinkGroup
+                  activeCondition={pathname === item.href}
+                  key={index}
+                >
+                  {(handleClick, open) => {
+                    return (
+                      <>
+                        <div
+                          className={`relative flex items-center gap-3 py-2 px-8 hover:bg-gray-100 text-sm hover:rounded-r-full text-gray-600 mr-3`}
+                          onClick={() => {
+                            sidebarExpanded
+                              ? handleClick()
+                              : setSidebarExpanded(true);
+                          }}
+                        >
+                          <item.icon className="w-5 h-5 text-gray-600 " />
+                          {item.name}
+                          {open ? (
+                            <ChevronDownIcon className="w-5 h-5 text-gray-600 absolute right-4" />
+                          ) : (
+                            <ChevronUpIcon className="w-5 h-5 text-gray-600 absolute right-4" />
+                          )}
+                        </div>
+                        {item.submenu.map((subitem, index) => (
+                          <motion.div
+                            key={index}
+                            initial={{ height: 0, opacity: 0, y: -10 }} // Establece la altura inicial, opacidad y posición Y
+                            animate={{
+                              height: open ? 'auto' : 0,
+                              opacity: open ? 1 : 0,
+                              y: open ? 0 : -10
+                            }} // Anima la altura, opacidad y posición Y
+                            transition={{ duration: 0.3 }} // Duración de la transición
+                            className={`overflow-hidden`}
                           >
-                            <item.icon className="w-5 h-5 text-gray-600 " />
-                            {item.name}
-                            {open ? (
-                              <ChevronDownIcon className="w-5 h-5 text-gray-600 absolute right-4" />
-                            ) : (
-                              <ChevronUpIcon className="w-5 h-5 text-gray-600 absolute right-4" />
-                            )}
-                          </div>
-                          {item.submenu.map((subitem, index) => (
-                            <motion.div
-                              key={index}
-                              initial={{ height: 0, opacity: 0, y: -10 }} // Establece la altura inicial, opacidad y posición Y
-                              animate={{
-                                height: open ? 'auto' : 0,
-                                opacity: open ? 1 : 0,
-                                y: open ? 0 : -10
-                              }} // Anima la altura, opacidad y posición Y
-                              transition={{ duration: 0.3 }} // Duración de la transición
-                              className={`overflow-hidden`}
-                            >
-                              <ul className="mt-3 flex flex-col pl-6">
-                                <li>
-                                  <Link
-                                    href={subitem.href}
-                                    className={`relative flex items-center gap-2.5 rounded-md py-2 px-4 duration-300 ease-in-out   ${
+                            <ul>
+                              <li
+                                className={` mr-3 ${
+                                  pathname === subitem.href
+                                    ? 'bg-cyan-700 text-white font-medium text-sm rounded-r-full'
+                                    : 'hover:bg-gray-100 text-gray-600 text-sm hover:rounded-r-full'
+                                } `}
+                              >
+                                <Link
+                                  href={subitem.href}
+                                  className={`relative flex items-center gap-3 py-2 px-8 ml-6`}
+                                >
+                                  <subitem.icon
+                                    className={`w-5 h-5 ${
                                       pathname === subitem.href
-                                        ? 'bg-cyan-700 text-white font-medium'
-                                        : 'hover:bg-gray-100 text-gray-600 font-normal'
-                                    } `}
-                                  >
-                                    <subitem.icon
-                                      className={`w-5 h-5 ${
-                                        pathname === subitem.href
-                                          ? 'text-white'
-                                          : 'text-gray-600'
-                                      }`}
-                                    />
-                                    {subitem.name}
-                                  </Link>
-                                </li>
-                              </ul>
-                            </motion.div>
-                          ))}
-                        </>
-                      );
-                    }}
-                  </SidebarLinkGroup>
-                ) : (
-                  <li key={index}>
-                    <Link
-                      href={item.href}
-                      className={`relative flex items-center gap-2.5 rounded-md py-2 px-3 duration-300 ease-in-out  ${
-                        pathname === item.href
-                          ? 'bg-cyan-700 text-white font-medium'
-                          : 'hover:bg-gray-100 text-gray-600 font-normal'
+                                        ? 'text-white'
+                                        : 'text-gray-600'
+                                    }`}
+                                  />
+                                  {subitem.name}
+                                </Link>
+                              </li>
+                            </ul>
+                          </motion.div>
+                        ))}
+                      </>
+                    );
+                  }}
+                </SidebarLinkGroup>
+              ) : (
+                <li key={index}>
+                  <Link
+                    href={item.href}
+                    className={`relative flex items-center gap-3 py-2 px-8 mr-3 ${
+                      pathname === item.href
+                        ? 'bg-cyan-700 text-white font-medium text-sm rounded-r-full'
+                        : 'hover:bg-gray-100 text-gray-600 text-sm hover:rounded-r-full'
+                    }`}
+                  >
+                    <item.icon
+                      className={`w-5 h-5 ${
+                        pathname === item.href ? 'text-white' : 'text-gray-600'
                       }`}
-                    >
-                      <item.icon
-                        className={`w-5 h-5 ${
-                          pathname === item.href
-                            ? 'text-white'
-                            : 'text-gray-600'
-                        }`}
-                      />
-                      {item.name}
-                    </Link>
-                  </li>
-                )
-              )}
-            </ul>
-          </div>
+                    />
+                    {item.name}
+                  </Link>
+                </li>
+              )
+            )}
+          </ul>
         </nav>
       </div>
     </aside>

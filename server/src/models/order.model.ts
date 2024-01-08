@@ -3,7 +3,6 @@ import { IOrder } from '../../types';
 
 const orderSchema = new mongoose.Schema(
   {
-    table: Number,
     date: {
       type: Date,
       default: Date.now,

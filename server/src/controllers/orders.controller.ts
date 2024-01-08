@@ -31,15 +31,10 @@ const getOrdersByBox = async (req: Request, res: Response) => {
 }
 
 const createOrder = async (req: Request, res: Response) => {
-  let table!: number;
   let products!: TProduct[];
 
   try {
     const { total, box, paymethod } = req.body;
-
-    if (req.body?.table) {
-      table = req.body?.table;
-    }
 
     if (req.body?.products) {
       products = req.body?.products;
@@ -58,7 +53,6 @@ const createOrder = async (req: Request, res: Response) => {
     }
 
     const newOrder = new Order({
-      table,
       products,
       total,
       paymethod,

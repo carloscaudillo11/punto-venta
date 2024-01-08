@@ -19,7 +19,7 @@ const DashboardLayout = async ({
         <div className="z-0 relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
           <Header user={session?.user} />
           <main className="custom-scrollbar overflow-y-auto">
-            <div className="mx-auto max-w-screen-3xl p-6 md:p-10">
+            <div className="mx-auto max-w-screen-3xl">
               <Suspense fallback={<Loading />}>{children}</Suspense>
             </div>
           </main>

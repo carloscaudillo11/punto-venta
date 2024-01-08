@@ -1,13 +1,10 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { Roboto } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import Providers from '@/context/Providers';
 import { ContextProvider } from '@/context/ProjectProvider';
 
-const font = Roboto({
-  weight: '400',
-  subsets: ['latin']
-});
+const font = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Embrujo De Mar',

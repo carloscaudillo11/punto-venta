@@ -12,7 +12,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { type DragEvent, useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { type FormData } from '@/types';
+import { type IMenu } from '@/types';
 import { toast } from 'sonner';
 import axios from '@/app/api/axios';
 
@@ -26,12 +26,12 @@ const NewMenuPage = (): JSX.Element => {
     handleSubmit,
     setValue,
     formState: { errors }
-  } = useForm<FormData>({
+  } = useForm<IMenu>({
     defaultValues: {
       name: '',
       description: '',
       category_Menu: '',
-      price: 0,
+      price: '',
       image: null
     }
   });
@@ -58,11 +58,11 @@ const NewMenuPage = (): JSX.Element => {
     }
   };
 
-  const onSubmit = (data: FormData): void => {
+  const onSubmit = (data: IMenu): void => {
     const formData = new FormData();
     formData.append('name', data.name);
     formData.append('description', data.description);
-    formData.append('price', data.price.toString());
+    formData.append('price', data.price);
     formData.append('category_Menu', data.category_Menu);
     if (data.image) {
       formData.append('image', data.image);
@@ -70,8 +70,7 @@ const NewMenuPage = (): JSX.Element => {
     const fetch = async (): Promise<any> => {
       if (params.id) {
         const res = await axios.put(
-          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          `/menu/updateMenuElement/${params.id}`,
+          `/menu/updateMenuElement/${String(params.id)}`,
           formData,
           {
             withCredentials: true,
@@ -114,10 +113,12 @@ const NewMenuPage = (): JSX.Element => {
   useEffect(() => {
     if (params.id) {
       const fetch = async (): Promise<any> => {
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        const res = await axios.get(`/menu/getMenuElement/${params.id}`, {
-          withCredentials: true
-        });
+        const res = await axios.get(
+          `/menu/getMenuElement/${params.id.toString()}`,
+          {
+            withCredentials: true
+          }
+        );
         return res.data;
       };
       const promise = fetch();
@@ -137,8 +138,8 @@ const NewMenuPage = (): JSX.Element => {
 
   return (
     <div className="flex justify-center">
-      <Card className="max-w-4xl">
-        <form className="py-4 sm:px-3" onSubmit={handleSubmit(onSubmit)}>
+      <Card className="max-w-3xl">
+        <form className="py-4 sm:px-8" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-15">
             <div className="border-b border-gray-900/10 pb-12">
               <h2 className="text-base font-semibold leading-7 text-gray-900">
@@ -159,6 +160,7 @@ const NewMenuPage = (): JSX.Element => {
                   <div className="mt-2">
                     <TextInput
                       id="name"
+                      placeholder=""
                       {...register('name', {
                         required: {
                           value: true,
@@ -182,6 +184,8 @@ const NewMenuPage = (): JSX.Element => {
                   <div className="mt-2">
                     <NumberInput
                       id="price"
+                      placeholder=""
+                      enableStepper={false}
                       {...register('price', {
                         required: {
                           value: true,
@@ -269,7 +273,7 @@ const NewMenuPage = (): JSX.Element => {
                           {file ? (
                             <span>{file.name}</span>
                           ) : (
-                            <span>Arrastra una imagen aquí</span>
+                            <span>Selecciona una imagen aqui</span>
                           )}
                           <input
                             id="file-upload"

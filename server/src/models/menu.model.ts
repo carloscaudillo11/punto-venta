@@ -17,7 +17,7 @@ const menuSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    price: Number,
+    price: String,
     image: {
       url: String,
       public_id: String,

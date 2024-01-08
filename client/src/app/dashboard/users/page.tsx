@@ -20,7 +20,7 @@ const getUsers = async (): Promise<any> => {
 const UsersPage = async (): Promise<JSX.Element> => {
   const users = await getUsers();
   return (
-    <div className="flex flex-col gap-7 py-2">
+    <div className="flex flex-col gap-7 py-2 p-6 md:p-10">
       <div className="flex justify-between">
         <h1 className="text-xl font-bold tracking-tight text-gray-700">
           Registrar Usuario

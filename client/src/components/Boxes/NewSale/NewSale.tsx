@@ -13,8 +13,7 @@ import {
   Select,
   SelectItem,
   TableFoot,
-  TableFooterCell,
-  NumberInput
+  TableFooterCell
 } from '@tremor/react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 import { TrashIcon } from '@heroicons/react/24/outline';
@@ -23,6 +22,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from '@/app/api/axios';
 import { toast } from 'sonner';
 import { AnimatePresence, motion } from 'framer-motion';
+import ImageWithSkeleton from '@/components/ui/ImageWithSkeleton';
 
 const NewSale = ({
   menu,
@@ -37,7 +37,7 @@ const NewSale = ({
   const [inputValue, setInputValue] = useState('');
   const [cantidades, setCantidades] = useState<Record<string, number>>({});
   const [payMethod, setPayMethod] = useState('Efectivo');
-  const [mesa, setMesa] = useState<number>(0);
+  const [mesa, setMesa] = useState('1');
   const [total, setTotal] = useState<number>(0);
   const [subTotal, setSubTotal] = useState<number>(0);
   const [iva, setIva] = useState<number>(0);
@@ -73,8 +73,10 @@ const NewSale = ({
 
     setCantidades((prevCantidades) => {
       const nuevasCantidades = { ...prevCantidades };
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-      delete nuevasCantidades[id];
+      Reflect.deleteProperty(
+        nuevasCantidades,
+        id as keyof typeof nuevasCantidades
+      );
       return nuevasCantidades;
     });
   };
@@ -120,7 +122,6 @@ const NewSale = ({
     );
   }, [cantidades, productos]);
 
-  // close on click outside
   useEffect(() => {
     const clickHandler = (e: MouseEvent): void => {
       if (!filtroInputRef.current) return;
@@ -179,7 +180,7 @@ const NewSale = ({
     setInputValue('');
     setCantidades({});
     setPayMethod('Efectivo');
-    setMesa(0);
+    setMesa('1');
     setTotal(0);
     setSubTotal(0);
     setIva(0);
@@ -229,13 +230,13 @@ const NewSale = ({
 
       <div className="flex flex-col gap-3 sm:flex-row">
         <motion.div
-          className="w-full sm:w-8/12 relative"
+          className="w-full sm:w-full md:w-8/12 relative"
           variants={childVariants}
           initial="hidden"
           animate="visible"
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <Card className="flex flex-col gap-5 sm:p-8">
+          <Card className="flex flex-col gap-5 sm:p-6">
             <div className="flex flex-col sm:flex-row justify-between items-center">
               <Title className="w-full sm:w-3/5">
                 <Bold>Productos</Bold>
@@ -270,7 +271,7 @@ const NewSale = ({
                 </div>
               </div>
             </div>
-            <div className="mt-4 overflow-y-hidden">
+            <div className="mt-4 overflow-y-hidden sm:overflow-x-hidden">
               <table className="w-full divide-y divide-gray-200">
                 <thead>
                   <tr>
@@ -296,34 +297,35 @@ const NewSale = ({
                 </thead>
                 <tbody>
                   <AnimatePresence mode="wait">
-                    {productos.map((item: Menu, index: number) => (
+                    {productos.map((item: Menu) => (
                       <motion.tr
                         key={item._id}
-                        className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}
                         variants={productVariants}
                         initial="hidden"
                         animate="visible"
                         exit="exit"
                       >
                         {item.image && (
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <img
+                          <td className="px-6 py-4 whitespace-normal">
+                            <ImageWithSkeleton
                               src={item.image.url}
                               alt={item.name}
-                              className="w-full sm:w-25 h-15 rounded-sm"
+                              width={600}
+                              height={600}
+                              className="w-25 h-15 rounded-lg"
                             />
                           </td>
                         )}
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                        <td className="px-6 py-4 whitespace-normal text-sm font-medium text-gray-500">
                           {item.name}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                        <td className="px-6 py-4 whitespace-normal text-sm font-medium text-gray-500">
                           {item.category_Menu}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                        <td className="px-6 py-4 whitespace-normal text-sm font-medium text-gray-500">
                           ${item.price}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                        <td className="px-6 py-4 whitespace-normal text-sm font-medium text-gray-500">
                           <div className="flex items-center">
                             <Button
                               className="w-8 h-8"
@@ -367,8 +369,8 @@ const NewSale = ({
           </Card>
         </motion.div>
 
-        <div className="w-full sm:w-4/12">
-          <Card className="sm:p-8">
+        <div className="w-full sm:w-full md:w-4/12">
+          <Card className="sm:p-6">
             <div className="flex flex-col gap-4">
               <Title>
                 <Bold>Resumen de la orden</Bold>
@@ -376,20 +378,24 @@ const NewSale = ({
               <Table>
                 <TableBody>
                   <TableRow className="flex justify-between">
-                    <TableCell>SubTotal</TableCell>
-                    <TableCell>
+                    <TableCell className="whitespace-normal">
+                      SubTotal
+                    </TableCell>
+                    <TableCell className="whitespace-normal">
                       <Bold>${subTotal.toFixed(2)}</Bold>
                     </TableCell>
                   </TableRow>
                   <TableRow className="flex justify-between">
-                    <TableCell>IVA</TableCell>
-                    <TableCell>
+                    <TableCell className="whitespace-normal">IVA</TableCell>
+                    <TableCell className="whitespace-normal">
                       <Bold>${iva.toFixed(2)}</Bold>
                     </TableCell>
                   </TableRow>
                   <TableRow className="flex justify-between items-center">
-                    <TableCell>Metodo de pago</TableCell>
-                    <TableCell>
+                    <TableCell className="whitespace-normal">
+                      Metodo de pago
+                    </TableCell>
+                    <TableCell className="whitespace-normal">
                       <Select value={payMethod} onValueChange={setPayMethod}>
                         <SelectItem value="Efectivo">
                           <Text>Efectivo</Text>
@@ -400,26 +406,13 @@ const NewSale = ({
                       </Select>
                     </TableCell>
                   </TableRow>
-                  <TableRow className="flex justify-between items-center">
-                    <TableCell>Mesa</TableCell>
-                    <TableCell>
-                      <NumberInput
-                        value={mesa}
-                        onValueChange={(value: number) => {
-                          setMesa(value);
-                        }}
-                        min={1}
-                        max={10}
-                      />
-                    </TableCell>
-                  </TableRow>
                   <TableRow className="flex justify-between">
-                    <TableCell>
+                    <TableCell className="whitespace-normal">
                       <Title>
                         <Bold>Total</Bold>
                       </Title>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="whitespace-normal">
                       <Bold>${total.toFixed(2)}</Bold>
                     </TableCell>
                   </TableRow>

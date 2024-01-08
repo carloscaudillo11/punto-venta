@@ -31,7 +31,7 @@ const Header = (props: { user: any }): JSX.Element => {
       animate={sidebarOpen ? 'open' : 'closed'}
     >
       <div className="flex flex-grow items-center sm:justify-end justify-between px-4 py-4 shadow-2 md:px-6 2xl:px-11">
-        <div className="flex items-center gap-2 sm:gap-4 lg:hidden">
+        <div className="flex items-center gap-2 sm:gap-4 lg:hidden ">
           <motion.button
             onClick={toggleMenu}
             className="z-99999 block rounded-sm border border-gray-200 bg-white p-1.5 shadow-sm lg:hidden"

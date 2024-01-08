@@ -20,7 +20,7 @@ const getProviders = async (): Promise<any> => {
 const ProvidersPage = async (): Promise<JSX.Element> => {
   const providers = await getProviders();
   return (
-    <div className="flex flex-col gap-7 py-2">
+    <div className="flex flex-col gap-4 py-2 p-6 md:p-10">
       <div className="flex justify-between">
         <h1 className="text-xl font-bold tracking-tight text-gray-700">
           Registro Proveedores

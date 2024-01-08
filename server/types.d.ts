@@ -55,7 +55,6 @@ export interface IBox extends Document {
 }
 
 export interface IOrder extends Document {
-  table: number | null;
   date: Date;
   products: {
     element: ObjectId;
@@ -81,7 +80,7 @@ export interface IMenu extends Document {
   name: string;
   description: string;
   category_Menu: CategoryMenu;
-  price: number;
+  price: string;
   image: Image;
 }
 
@@ -90,7 +89,7 @@ export interface IProvider extends Document {
   lastname: string;
   contact: {
     email: string;
-    phone: number;
+    phone: string;
   };
   status: StatusProvider;
 }

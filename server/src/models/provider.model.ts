@@ -14,8 +14,12 @@ const providerSchema = new mongoose.Schema(
       trim: true,
     },
     contact: {
-      email: String,
-      phone: Number,
+      email: {
+        type: String,
+        trim: true,
+        match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+      },
+      phone: String,
     },
     status: {
       type: String,

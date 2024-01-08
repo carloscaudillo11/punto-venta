@@ -26,7 +26,7 @@ const AccountingPage = async (): Promise<JSX.Element> => {
         <h1 className="text-xl font-bold tracking-tight text-gray-700">
           Registrar Producto
         </h1>
-        <AddButton url='"/dashboard/products/accounting/new"' />
+        <AddButton url="/dashboard/products/accounting/new" />
       </div>
       <div>
         {products.length === 0 ? (

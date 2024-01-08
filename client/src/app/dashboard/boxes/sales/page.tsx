@@ -58,7 +58,8 @@ const SalesPage = async (): Promise<JSX.Element> => {
       opacity: 1,
       y: 0,
       transition: { duration: 0.5, ease: 'easeOut' }
-    }
+    },
+    exit: { opacity: 0, y: 20 }
   };
 
   return (
@@ -73,27 +74,39 @@ const SalesPage = async (): Promise<JSX.Element> => {
           exit="exit"
           transition={{ type: 'tween', duration: 0.5 }}
         >
-          <div className="flex justify-between">
-            <H1Motion
-              className="text-xl font-bold tracking-tight text-gray-700"
-              variants={childVariants}
-              initial="hidden"
-              animate="visible"
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              Ventas Del Dia
-            </H1Motion>
-          </div>
-          <div>
+          <H1Motion
+            className="text-xl font-bold tracking-tight text-gray-700"
+            variants={childVariants}
+            initial="hidden"
+            animate="visible"
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            Ventas Del Dia
+          </H1Motion>
+
+          <AnimatePresence mode="wait">
             {orders.length === 0 ? (
-              <div className="flex items-center gap-2 text-gray-500 justify-center">
+              <DivMotion
+                className="flex items-center gap-2 text-gray-500 justify-center"
+                variants={childVariants}
+                initial="hidden"
+                animate="visible"
+                transition={{ duration: 0.5, delay: 0.4 }}
+              >
                 <PencilSquareIcon className="w-5 h-5" />
                 <p>No hay datos aún</p>
-              </div>
+              </DivMotion>
             ) : (
-              <TableOrders orders={orders} />
+              <DivMotion
+                variants={childVariants}
+                initial="hidden"
+                animate="visible"
+                transition={{ duration: 0.5, delay: 0.4 }}
+              >
+                <TableOrders orders={orders} />
+              </DivMotion>
             )}
-          </div>
+          </AnimatePresence>
         </DivMotion>
       ) : (
         <DivMotion

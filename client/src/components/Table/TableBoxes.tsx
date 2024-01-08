@@ -22,7 +22,7 @@ import axios from '@/app/api/axios';
 import { useState } from 'react';
 import ModalBoxUpdate from '../Modal/ModalBox';
 import Paginate from '../ui/Paginate';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 interface Boxes {
   _id: number;
@@ -93,107 +93,87 @@ const TableBoxes = ({ boxes }: { boxes: Boxes[] }): JSX.Element => {
     }
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { duration: 0.5, ease: 'easeOut' }
-    }
-  };
-
-  const productVariants = {
-    hidden: { opacity: 0, y: -20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.4, ease: 'easeOut' }
-    },
-    exit: { opacity: 0, y: -20 }
-  };
-
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      transition={{ duration: 0.5, delay: 0.2 }}
-      className="flex flex-col gap-6"
-    >
-      <motion.div
-        variants={childVariants}
-        initial="hidden"
-        animate="visible"
-        transition={{ duration: 0.5, delay: 0.6 }}
-        className="flex flex-col gap-2"
-      >
-        <div className="space-x-0.5 flex justify-start items-center">
-          <Title> Historial de Cajas </Title>
-          <Icon
-            icon={InformationCircleIcon}
-            variant="simple"
-            tooltip="Muestra las cajas registradas"
-          />
-        </div>
-        <div className="flex space-x-2">
-          <MultiSelect
-            className="max-w-full sm:max-w-xs"
-            onValueChange={setSelectedNames}
-            placeholder="Selecciona una caja"
-          >
-            {boxes.map((item) => (
-              <MultiSelectItem key={item._id} value={item.name}>
-                {item.name}
-              </MultiSelectItem>
-            ))}
-          </MultiSelect>
-          <Select
-            className="max-w-full sm:max-w-xs"
-            defaultValue="all"
-            onValueChange={setSelectedStatus}
-          >
-            <SelectItem value="all">Todas</SelectItem>
-            <SelectItem value="Abierta">Abierta</SelectItem>
-            <SelectItem value="Cerrada">Cerrada</SelectItem>
-          </Select>
-        </div>
-      </motion.div>
+    <>
+      <div className="flex flex-col gap-6">
+        <motion.div
+          variants={childVariants}
+          initial="hidden"
+          animate="visible"
+          transition={{ duration: 0.5, delay: 0.6 }}
+          className="flex flex-col gap-2"
+        >
+          <div className="space-x-0.5 flex justify-start items-center">
+            <Title> Historial de Cajas </Title>
+            <Icon
+              icon={InformationCircleIcon}
+              variant="simple"
+              tooltip="Muestra las cajas registradas"
+            />
+          </div>
+          <div className="flex space-x-2">
+            <MultiSelect
+              className="max-w-full sm:max-w-xs"
+              onValueChange={setSelectedNames}
+              placeholder="Filtrar"
+            >
+              {boxes.map((item) => (
+                <MultiSelectItem key={item._id} value={item.name}>
+                  <span className="text-xs">{item.name}</span>
+                </MultiSelectItem>
+              ))}
+            </MultiSelect>
+            <Select
+              className="max-w-full sm:max-w-xs"
+              defaultValue="all"
+              onValueChange={setSelectedStatus}
+            >
+              <SelectItem value="all">
+                <span className="text-xs">Todas</span>
+              </SelectItem>
+              <SelectItem value="Abierta">
+                <span className="text-xs">Abierta</span>
+              </SelectItem>
+              <SelectItem value="Cerrada">
+                <span className="text-xs">Cerrada</span>
+              </SelectItem>
+            </Select>
+          </div>
+        </motion.div>
 
-      <Card>
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead>
-              <tr>
-                <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                  Nombre
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                  Estatus
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                  Acciones
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <AnimatePresence mode="wait">
+        <Card>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead>
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Nombre
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Estatus
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Acciones
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
                 {currentBoxes.map((item, index) => (
-                  <motion.tr
+                  <tr
                     key={item._id}
                     className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}
-                    variants={productVariants}
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
                   >
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                    <td className="px-6 py-4 text-xs text-gray-500">
                       {item.name}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                    <td className="px-6 py-4">
                       {item.status === 'Abierta' ? (
-                        <Badge icon={SignalIcon}>{item.status}</Badge>
+                        <Badge icon={SignalIcon}>
+                          <span className="text-xs">{item.status}</span>
+                        </Badge>
                       ) : (
                         <Badge color="red" icon={SignalSlashIcon}>
-                          {item.status}
+                          <span className="text-xs">{item.status}</span>
                         </Badge>
                       )}
                     </td>
@@ -206,7 +186,7 @@ const TableBoxes = ({ boxes }: { boxes: Boxes[] }): JSX.Element => {
                             setOpenModalBoxUpdate(true);
                           }}
                         >
-                          <PencilIcon className="w-5 text-gray-600 hover:text-blue-600" />
+                          <PencilIcon className="w-4 text-gray-600 hover:text-blue-600" />
                         </button>
                         <button
                           className="flex items-center justify-center focus:outline-none"
@@ -221,29 +201,28 @@ const TableBoxes = ({ boxes }: { boxes: Boxes[] }): JSX.Element => {
                             });
                           }}
                         >
-                          <TrashIcon className="w-5 text-gray-600 hover:text-red-600" />
+                          <TrashIcon className="w-4 text-gray-600 hover:text-red-600" />
                         </button>
                       </div>
                     </td>
-                  </motion.tr>
+                  </tr>
                 ))}
-              </AnimatePresence>
-            </tbody>
-          </table>
-        </div>
-      </Card>
-
-      <Paginate
-        totalPages={totalPages}
-        currentPage={currentPage}
-        paginate={paginate}
-      />
+              </tbody>
+            </table>
+          </div>
+        </Card>
+        <Paginate
+          totalPages={totalPages}
+          currentPage={currentPage}
+          paginate={paginate}
+        />
+      </div>
       <ModalBoxUpdate
         open={openModalBoxUpdate}
         setOpen={setOpenModalBoxUpdate}
         box={box}
       />
-    </motion.div>
+    </>
   );
 };
 

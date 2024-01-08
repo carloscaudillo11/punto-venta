@@ -24,7 +24,7 @@ const TableOrders = ({ orders }: { orders: Order[] }): JSX.Element => {
   const [currentPage, setCurrentPage] = useState(1);
   const [salesCard, setSalesCard] = useState<number>(0);
   const [salesCash, setSalesCash] = useState<number>(0);
-  const itemsPerPage = 5;
+  const itemsPerPage = 4;
 
   const isOrderSelected = (order: Order): boolean =>
     order.paymethod === selectedPaymethod || selectedPaymethod === 'all';
@@ -92,7 +92,7 @@ const TableOrders = ({ orders }: { orders: Order[] }): JSX.Element => {
 
   return (
     <motion.div
-      className="flex flex-col gap-6"
+      className="flex flex-col gap-4"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -172,22 +172,18 @@ const TableOrders = ({ orders }: { orders: Order[] }): JSX.Element => {
           </Select>
         </div>
       </motion.div>
-
-      <div className="overflow-x-auto">
-        <Card>
+      <Card>
+        <div className="overflow-x-auto">
           <table className="w-full divide-y divide-gray-200">
             <thead>
               <tr>
-                <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                  N° Mesa
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Fecha
                 </th>
-                <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Metodo de pago
                 </th>
-                <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Total
                 </th>
               </tr>
@@ -195,24 +191,21 @@ const TableOrders = ({ orders }: { orders: Order[] }): JSX.Element => {
             <tbody>
               {currentOrders.map((item) => (
                 <tr key={item._id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
-                    Mesa {item.table}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                  <td className="px-6 py-4 whitespace-normal text-xs text-gray-500">
                     {date(item.date)}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                  <td className="px-6 py-4 whitespace-normal text-xs text-gray-500">
                     {item.paymethod}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500">
+                  <td className="px-6 py-4 whitespace-normal text-xs text-gray-500">
                     ${item.total}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-        </Card>
-      </div>
+        </div>
+      </Card>
       <Paginate
         totalPages={totalPages}
         currentPage={currentPage}

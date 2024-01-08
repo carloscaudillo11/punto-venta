@@ -13,15 +13,20 @@ const getProviders = async (_req: Request, res: Response) => {
 
 const createProvider = async (req: Request, res: Response) => {
   try {
-    const { name, lastname, nif_rif, address, contact } = req.body;
+    console.log(req.body);
+    const { name, lastname, contact, status } = req.body;
+
+    const email = contact && contact.email ? contact.email : '';
+    const phone = contact && contact.phone ? contact.phone : '';
 
     const newProvider = new Provider({
       name,
       lastname,
-      nif_rif,
-      address,
-      contact,
-      status: 'Activo',
+      contact: {
+        email,
+        phone
+      },
+      status: status || 'Activo'
     });
 
     const providerSaved = await newProvider.save();
@@ -31,6 +36,7 @@ const createProvider = async (req: Request, res: Response) => {
       return res.status(500).json({ message: error.message });
   }
 };
+
 
 const getProvider = async (req: Request, res: Response) => {
   try {

@@ -21,13 +21,14 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import axios from '@/app/api/axios';
 import { useState } from 'react';
-import { type Provider } from '@/types';
+import { type IProvider } from '@/types';
 
 const TableProviders = ({
   providers
 }: {
-  providers: Provider[];
+  providers: IProvider[];
 }): JSX.Element => {
+  console.log(providers);
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [selectedNames, setSelectedNames] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -57,7 +58,7 @@ const TableProviders = ({
     });
   };
 
-  const isMenuSelected = (providers: Provider): boolean =>
+  const isMenuSelected = (providers: IProvider): boolean =>
     (providers.status === selectedStatus || selectedStatus === 'all') &&
     (selectedNames.includes(providers.name) || selectedNames.length === 0);
 
@@ -77,20 +78,14 @@ const TableProviders = ({
 
   return (
     <>
-      <div>
-        <Flex
-          className="space-x-0.5"
-          justifyContent="start"
-          alignItems="center"
-        >
-          <Title> Registro de Proveedores </Title>
-          <Icon
-            icon={InformationCircleIcon}
-            variant="simple"
-            tooltip="Muestra los productos del menu"
-          />
-        </Flex>
-      </div>
+      <Flex className="space-x-0.5" justifyContent="start" alignItems="center">
+        <Title> Registro de Proveedores </Title>
+        <Icon
+          icon={InformationCircleIcon}
+          variant="simple"
+          tooltip="Muestra los productos del menu"
+        />
+      </Flex>
       <div className="flex space-x-2">
         <MultiSelect
           className="max-w-full sm:max-w-xs"

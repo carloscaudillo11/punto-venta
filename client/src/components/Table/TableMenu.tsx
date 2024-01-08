@@ -2,18 +2,11 @@
 import { InformationCircleIcon } from '@heroicons/react/24/solid';
 import { TrashIcon, PencilIcon } from '@heroicons/react/24/outline';
 import {
-  Flex,
   Icon,
   MultiSelect,
   MultiSelectItem,
   Select,
   SelectItem,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeaderCell,
-  TableRow,
   Title,
   Card
 } from '@tremor/react';
@@ -22,13 +15,16 @@ import { useRouter } from 'next/navigation';
 import axios from '@/app/api/axios';
 import { useState } from 'react';
 import { type Menu } from '@/types';
+import Paginate from '../ui/Paginate';
+import ImageWithSkeleton from '../ui/ImageWithSkeleton';
+import { motion } from 'framer-motion';
 
 const TableMenu = ({ menu }: { menu: Menu[] }): JSX.Element => {
+  console.log(menu);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedNames, setSelectedNames] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 4;
-
+  const itemsPerPage = 5;
   const router = useRouter();
 
   const Delete = async (id: any): Promise<void> => {
@@ -71,131 +67,158 @@ const TableMenu = ({ menu }: { menu: Menu[] }): JSX.Element => {
     setCurrentPage(pageNumber);
   };
 
+  const childVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: 'easeOut' }
+    }
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { duration: 0.5, ease: 'easeOut' }
+    }
+  };
+
   return (
-    <>
-      <div>
-        <Flex
-          className="space-x-0.5"
-          justifyContent="start"
-          alignItems="center"
-        >
+    <motion.div
+      className="flex flex-col gap-4"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      transition={{ duration: 0.5, delay: 0.5 }}
+    >
+      <motion.div
+        variants={childVariants}
+        initial="hidden"
+        animate="visible"
+        transition={{ duration: 0.5, delay: 0.6 }}
+        className="flex flex-col gap-1"
+      >
+        <div className="space-x-0.5 flex justify-start items-center">
           <Title> Historial de Menu </Title>
           <Icon
             icon={InformationCircleIcon}
             variant="simple"
             tooltip="Muestra los productos del menu"
           />
-        </Flex>
-      </div>
-      <div className="flex space-x-2">
-        <MultiSelect
-          className="max-w-full sm:max-w-xs"
-          onValueChange={setSelectedNames}
-          placeholder="Selecciona un elemento"
-        >
-          {menu.map((item) => (
-            <MultiSelectItem key={item._id} value={item.name}>
-              {item.name}
-            </MultiSelectItem>
-          ))}
-        </MultiSelect>
-        <Select
-          className="max-w-full sm:max-w-xs"
-          defaultValue="all"
-          onValueChange={setSelectedCategory}
-        >
-          <SelectItem value="all">Todas</SelectItem>
-          <SelectItem value="Abierta">Platillo</SelectItem>
-          <SelectItem value="Cerrada">Bebida Preparada</SelectItem>
-        </Select>
-      </div>
-      <Card className="mt-6">
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableHeaderCell>Imagen</TableHeaderCell>
-              <TableHeaderCell>Nombre</TableHeaderCell>
-              {/* <TableHeaderCell>Descripción</TableHeaderCell> */}
-              <TableHeaderCell>Categoria</TableHeaderCell>
-              <TableHeaderCell>Precio</TableHeaderCell>
-              <TableHeaderCell>Acciones</TableHeaderCell>
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {currentMenu.map((item) => (
-              <TableRow key={item._id}>
-                {item.image && (
-                  <TableCell>
-                    <img
-                      src={item.image.url}
-                      alt={item.name}
-                      className="w-25 h-15 rounded-lg"
-                    />
-                  </TableCell>
-                )}
-                <TableCell>{item.name}</TableCell>
-                <TableCell className="break-words">
-                  {item.category_Menu}
-                </TableCell>
-                <TableCell>${item.price}</TableCell>
-                <TableCell>
-                  <div className="flex gap-4">
-                    <button
-                      className="flex items-center justify-center focus:outline-none"
-                      onClick={() => {
-                        router.push(
-                          `/dashboard/products/menu/edit/${item._id}`
-                        );
-                      }}
-                    >
-                      <PencilIcon className="w-5 text-gray-600 hover:text-blue-600" />
-                    </button>
-                    <button
-                      className="flex items-center justify-center focus:outline-none"
-                      onClick={() => {
-                        toast(`Deseas eliminar ${item.name} `, {
-                          action: {
-                            label: 'Eliminar',
-                            onClick: async () => {
-                              await Delete(item._id);
-                            }
-                          }
-                        });
-                      }}
-                    >
-                      <TrashIcon className="w-5 text-gray-600 hover:text-red-600" />
-                    </button>
-                  </div>
-                </TableCell>
-              </TableRow>
+        </div>
+        <div className="flex space-x-2">
+          <MultiSelect
+            className="max-w-full sm:max-w-xs whitespace-normal"
+            onValueChange={setSelectedNames}
+            placeholder="Filtrar"
+          >
+            {menu.map((item) => (
+              <MultiSelectItem key={item._id} value={item.name}>
+                {item.name}
+              </MultiSelectItem>
             ))}
-          </TableBody>
-        </Table>
-      </Card>
-      <div className="mt-6">
-        <nav className="flex justify-center">
-          <ul className="flex items-center">
-            {Array.from({ length: totalPages }, (_, index) => (
-              <li key={index} className="mx-1">
-                <button
-                  onClick={() => {
-                    paginate(index + 1);
-                  }}
-                  className={`px-3 py-1 rounded-md ${
-                    currentPage === index + 1
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-200'
-                  }`}
+          </MultiSelect>
+          <Select
+            className="max-w-full sm:max-w-xs"
+            defaultValue="all"
+            onValueChange={setSelectedCategory}
+          >
+            <SelectItem value="all">Todas</SelectItem>
+            <SelectItem value="Platillo">Platillo</SelectItem>
+            <SelectItem value="Bebida Preparada">Bebida Preparada</SelectItem>
+          </Select>
+        </div>
+      </motion.div>
+      <Card>
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead>
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Imagen
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Nombre
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Categoría
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Precio
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentMenu.map((item, index) => (
+                <tr
+                  key={item._id}
+                  className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}
                 >
-                  {index + 1}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </div>
-    </>
+                  {item.image && (
+                    <td className="px-6 py-4">
+                      <ImageWithSkeleton
+                        src={item.image.url}
+                        alt={item.name}
+                        width={600}
+                        height={600}
+                        className="w-20 h-10"
+                      />
+                    </td>
+                  )}
+                  <td className="px-6 py-4 whitespace-normal text-xs  text-gray-500">
+                    {item.name}
+                  </td>
+                  <td className="px-6 py-4 whitespace-normal text-xs text-gray-500">
+                    {item.category_Menu}
+                  </td>
+                  <td className="px-6 py-4 whitespace-normal text-xs text-gray-500">
+                    ${item.price}
+                  </td>
+                  <td className="px-6 py-4 whitespace-normal text-xs text-gray-500">
+                    <div className="flex gap-4">
+                      <button
+                        className="flex items-center justify-center focus:outline-none"
+                        onClick={() => {
+                          router.push(
+                            `/dashboard/products/menu/edit/${item._id}`
+                          );
+                        }}
+                      >
+                        <PencilIcon className="w-4 text-gray-600 hover:text-blue-600" />
+                      </button>
+                      <button
+                        className="flex items-center justify-center focus:outline-none"
+                        onClick={() => {
+                          toast(`Deseas eliminar ${item.name} `, {
+                            action: {
+                              label: 'Eliminar',
+                              onClick: async () => {
+                                await Delete(item._id);
+                              }
+                            }
+                          });
+                        }}
+                      >
+                        <TrashIcon className="w-4 text-gray-600 hover:text-red-600" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+      <Paginate
+        totalPages={totalPages}
+        currentPage={currentPage}
+        paginate={paginate}
+      />
+    </motion.div>
   );
 };
 

@@ -269,7 +269,7 @@ const NewProductPage = (): JSX.Element => {
                           {file ? (
                             <span>{file.name}</span>
                           ) : (
-                            <span>Arrastra una imagen aquí</span>
+                            <span>Agrega una imagen aqui</span>
                           )}
                           <input
                             id="file-upload"

@@ -43,13 +43,13 @@ export interface Products {
   };
 }
 
-export interface Provider {
+export interface IProvider {
   _id: number;
   name: string;
   lastname: string;
   contact: {
     email: string;
-    phone: number;
+    phone: string;
   };
   status: string;
 }
@@ -88,10 +88,10 @@ export interface Order {
   user: number;
 }
 
-export interface FormData {
+export interface IMenu {
   name: string;
   description: string;
   category_Menu: string;
-  price: number;
+  price: string;
   image: File | null;
 }
